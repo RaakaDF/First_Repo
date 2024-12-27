@@ -1,0 +1,211 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    min-height: 65vh;
+    width: 100%;
+    background-image: url('images/imagecentral.jpg');
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+nav {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+nav img {
+    width: 250px;
+}
+a{
+    text-decoration:none;
+}
+.lien-accueil {
+    flex: 1;
+    text-align: center;
+    padding-top: 7px;
+}
+.lien-accueil ul li a {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+    color: #fff;
+}
+
+.lien-inscrire {
+    /*flex: 1;*/
+    text-align: right;
+    padding-top: 7px;
+    color: aquamarine;
+}
+.lien-inscrire a {
+    color: #fff;
+    font-size: 15px;
+}
+.lien-inscrire ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+    color: #fff;
+    font-size: 15px;
+}
+.lien-inscrire button{
+    width: 100px;
+    max-width: 100px;
+    height: 40px;
+    background-color: transparent;
+    /*border: rgba(48, 48, 48, 0.5) solid 1px;*/
+    border: 2px solid #fff;
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: 0.5s;
+}
+.lien-inscrire button:hover {
+    border: 1px solid aquamarine;
+    background: rgba(127, 255, 212, 0.421);
+}
+
+.lien-connecter {
+    /*flex: 1;*/
+    text-align: right;
+    padding-top: 7px;
+}
+.lien-connecter a {
+    color: #000000d4;
+    font-size: 15px;
+}
+.lien-connecter ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+    color: #fff;
+    font-size: 15px;
+}
+.lien-connecter button {
+    width: 110px;
+    max-width: 120px;
+    height: 40px;
+    background-color: rgba(127, 255, 212, 0.847);
+    border: rgba(48, 48, 48, 0.5) solid 1px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.text-box {
+    width: 90%;
+    color: #fff;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.text-box h1 {
+    font-size: 62px;
+    font-family: sans-serif;
+}
+.text-box p {
+    font-size: 16.5px;
+    margin: 10px 0px 40px;
+    color: aquamarine;
+}
+.boutton {
+    display: inline-block;
+    color: #fff;
+    border: 1px solid #fff;
+    background: transparent;
+    padding: 12px 34px;
+    font-size: 15px;
+    position: relative;
+    cursor: pointer;
+}
+.boutton:hover {
+    border: 1px solid aquamarine;
+    background: rgba(127, 255, 212, 0.421);
+    transition: 0.5s;
+}
+
+/* offres */
+
+.offre {
+    width: 80%;
+    margin: auto;
+    padding-top: 100px;
+    text-align: center;
+}
+
+.offre h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: rgb(212, 120, 63)
+}
+p {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 22px;
+    padding: 10px;
+    color: rgba(8, 8, 8, 0.703);
+}
+.colone-en-ligne {
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+}
+.offre-col {
+    flex-basis: 31%;
+    background: #ea8949a0;
+    border-radius: 10px;
+    margin-bottom: 5%;
+    padding: 20px 12px;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+h3 {
+    text-align: center;
+    font-weight: 600;
+    margin: 10px 0;
+}
+.offre-col:hover {
+    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.2);
+}
+/*responsivité des colones*/
+@media(max-width: 700px) {
+    .colone-en-ligne{
+        flex-direction: column;
+    }
+}
+
+/*campus*/
+.campus {
+    width: 80%;
+    margin: auto;
+    padding-top: 50px;
+    text-align: center;
+}
+/*.compus h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: rgb(212, 120, 63)
+}*/
+.campus-ligne {
+   /* flex-basis: 32%;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;*/
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+}
+.composantes img {
+    width: 90%;
+    height: 100%;
+}

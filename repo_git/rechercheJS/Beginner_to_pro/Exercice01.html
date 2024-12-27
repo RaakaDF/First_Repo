@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice Cours 9 </title>
+</head>
+<body>
+    <button>9a</button>
+    <button class="btn">9b</button>
+    <button class="btn-heads" onclick="ButtonHeads();">heads</button>
+    <button class="btn-tails" onclick="ButtonTails();">tails</button>
+    <p class="id"></p>
+
+    <input type="text" id="nameInput" placeholder="Entrez votre nom">
+    <button type="submit" onclick="displayname();">Submit</button>
+    <p id="output"></p>
+
+    <input type="text" id="nameInput" placeholder="Entrez votre nom" onkeyup="displayname()">
+    <!-- Champ de texte avec onkeyup pour déclencher la fonction updateName -->
+    
+    <p id="output"></p>
+    <!-- Paragraphe pour afficher le résultat -->
+    
+    <script>
+        const butt9a = document.querySelector('button');
+        console.log(butt9a);
+
+        const butt9b = document.querySelector('.btn')
+        .innerHTML = "9b done";
+
+        let message = document.querySelector('.id')
+
+        function ButtonHeads() {
+            const heads = document.querySelector('.btn-heads');
+
+            message.textContent = "You chose: heads";
+        }
+
+        function ButtonTails() {
+            const heads = document.querySelector('.btn-tails');
+
+            message.textContent = "You chose: tails";
+        }
+
+        // <button type="submit" onkeydown="displaynameKdown(event);">Submit</button>
+        /*function displaynameKdown(event) {
+            if (event.key === 'Enter') {
+                displayname();
+            }
+        }*/
+
+        function displayname() {
+            // Récupère la valeur du champ de texte
+            const name = document.querySelector('#nameInput').value;
+            // Sélectionne l'élément où le message sera affiché
+            const output = document.querySelector('#output');
+
+            // Modifie le texte pour afficher le nom
+            output.textContent = "Votre nom est :" + name
+        }
+    </script>
+</body>
+</html>

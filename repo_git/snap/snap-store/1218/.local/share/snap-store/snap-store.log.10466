@@ -1,0 +1,3 @@
+2024-08-16 18:09:21.898554 ERROR packagekit: Received PackageKitErrorCodeEvent (PackageKitError.dependencyResolutionFailed): The following packages have unmet dependencies:
+  packettracer: Depends: libgl1-mesa-glx but it is not installable
+

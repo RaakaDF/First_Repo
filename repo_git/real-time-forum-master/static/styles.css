@@ -1,0 +1,418 @@
+body {
+    background-color: rgb(174, 192, 192);
+    font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+}
+
+.subbox {
+    border-radius: 5px;
+    border: 2px solid #2b51837a;
+    background-color: rgb(125, 153, 196);
+    padding: 5px;
+    margin: 3px;
+    height:auto;
+    text-align: center;
+}
+
+.threadbox {
+    border-radius: 5px;
+    border: 2px solid #2b51837a;
+    background-color: rgb(125, 153, 196);
+    padding: 30px;
+    margin-bottom: 27px;
+    display: flex;
+    height: fit-content;
+}
+
+.title {
+    float: left;
+    text-align: left;
+    height: 50px;
+    position: relative;
+    top: 0px;
+    width: 50%;
+    overflow-wrap: break-word;
+    height: fit-content;
+}
+
+.headerBtnsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.threadcats {
+    text-align: center;
+    width: 20%;
+}
+
+.threadinfo {
+    text-align: center;
+    width: 20%;
+}
+
+.postbox {
+    border-radius: 5px;
+    border: 2px solid #2b51837a;
+    background-color: rgb(125, 153, 196);
+    padding: 30px;
+    margin-bottom: 27px;
+    display: flex;
+    height: auto;
+}
+
+.postinfobox {
+    border: solid black;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: rgb(0, 204, 255);
+    flex: 1;
+    font-size: 20px;
+    border: 2px solid #1f276d54;
+}
+
+.reactionbox {
+    text-align: center;
+    flex: 2;
+    font-size: 15px;
+    margin-top: 30px;
+}
+
+.reactionbtn {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    height: 50px;
+    font-size: 30px;
+}
+
+.reactionbtnLiked {
+    background-color: green;
+    background-repeat: no-repeat;
+    border: solid 1px black;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    height: 50px;
+    font-size: 30px;
+}
+
+.reactionbtnDisliked {
+    background-color: red;
+    background-repeat: no-repeat;
+    border: solid 1px black;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    height: 50px;
+    font-size: 30px;
+}
+
+.postcontent {
+    flex: 7;
+    max-width: 60%;
+    height: fit-content;
+    font-size: 20px;
+    text-align: left;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: block;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
+
+.header {
+    background-color: rgb(125, 153, 196);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.inputbox {
+    border: #7a7fc0 solid 2px;
+    background-color: #c2e6fb;
+    border-radius: 5px;
+    height: 30px;
+}
+
+.catSelect {
+    background-color: #c2e6fb;
+    border: #7a7fc0 solid 2px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.button-33 {
+    background-color: #c2e6fb;
+    border-radius: 100px;
+    box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+    color: rgb(0, 19, 128);
+    cursor: pointer;
+    display: inline-block;
+    font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+    padding: 7px 20px;
+    text-align: center;
+    text-decoration: none;
+    border: 0;
+    font-size: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button-33:not(:disabled):hover {
+    box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+    transform: scale(1.05);
+}
+
+.createPostContent {
+    width: 100%;
+    background-color: #c2e6fb;
+    border: #7a7fc0 solid 2px;
+    border-radius: 5px;
+    height: 100px;
+    font-size: 20px;
+}
+
+.createPostHeaderAndTags {
+    width: 50%;
+    background-color: #c2e6fb;
+    border: #7a7fc0 solid 2px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.toolbar {
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+}
+
+.option {
+    flex-grow: 1;
+    padding: 5px 10px;
+    background-color: #ccc;
+    cursor: pointer;
+    justify-content: center;
+    height: 50px;
+    align-items: center;
+    display: flex;
+}
+
+.option.selected {
+    background-color: rgb(125, 153, 196);
+    color: #fff;
+}   
+
+.option:hover {
+    background-color: #9c9a9a;
+}
+
+.option.selected:hover {
+    background-color: rgb(125, 153, 196);
+    color: #fff;
+}
+
+.messages {
+    visibility: hidden;
+    overflow-y: scroll;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 25%;
+}
+
+.statusIndicator {
+    width: 45px;
+    height: 45px;
+    border-radius: 1000px;
+}
+
+.userBox {
+    direction: ltr;
+    border: 3px black solid;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+    background-color: rgb(140, 195, 231);
+    overflow-wrap: break-word;
+}
+
+.chatBox {
+    width: 100%; 
+    background-color: #c2e6fb; 
+    border: #7a7fc0 solid 2px; 
+    border-radius: 5px; 
+    height: 60%;
+    overflow: auto;
+}
+
+.msgBoxSent {
+    background-color: rgb(7, 161, 189);
+    border: black solid 1px; 
+    border-radius: 20px;
+    max-width: 60%;
+    width: fit-content;
+    height: fit-content;
+    margin-left: 10;
+    padding: 10px;
+    margin-right: 10;
+    margin-bottom: 7;
+    order: 2;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+.msgBoxReceived {
+    background-color: rgb(224, 224, 224);
+    border: black solid 1px; 
+    border-radius: 20px;
+    max-width: 60%;
+    width: fit-content;
+    height: fit-content;
+    margin-right: 10;
+    padding: 10px;
+    margin-left: 10;
+    margin-bottom: 7;
+    order: 1;
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+.nicknameBoxSent {
+    text-align: right;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    font-size: 25px;
+    color: grey;
+}
+
+.titleText {
+    font-size: 30px; 
+    font-weight: bold; 
+    text-decoration: none;
+    color: rgb(32, 31, 31);
+}
+
+.titleText:visited {
+    color: #4d4d4d;
+}
+
+.nicknameBoxReceived {
+    text-align: left;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    font-size: 25px;
+    color: grey;
+}
+
+.timeBoxSent {
+    visibility: hidden;
+    color: grey;
+    margin-right: 10px;
+    order: 1;
+    width: 50%;
+    text-align: right;
+}
+
+.timeBoxReceived {
+    visibility: hidden;
+    color: grey;
+    margin-left: 10px;
+    order: 2;
+    width: 50%;
+    text-align: left;
+}
+
+.errorMessage {
+    margin-top: 1px;
+    color: red;
+    height: 5px;
+    font-size: 14px;
+}
+
+.messageContainer {
+    display: flex;
+    align-items: center;
+}
+
+.received {
+    justify-content: flex-start;
+}
+  
+.sent {
+    justify-content: flex-end;
+}
+
+#snackbar {
+    display: none;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 30px;
+}
+  
+#snackbar.show {
+    display: block;
+    cursor: pointer;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {top: 30px; opacity: 1;}
+    to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {top: 30px; opacity: 1;}
+    to {top: 0; opacity: 0;}
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background-color: rgb(125, 153, 196);
+    border: 1px solid black;
+}
+::-webkit-scrollbar-thumb:hover {
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background-color: rgb(79, 108, 151);
+}
+
+.button-33:disabled {
+    background-color: rgb(192, 192, 192);
+    box-shadow: none;
+    color: grey;
+}
+
+.button-33:disabled:hover {
+    cursor: default;
+}

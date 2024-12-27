@@ -1,0 +1,21 @@
+{
+  "discord_desktop_core": {
+    "installedVersion": 1
+  },
+  "discord_erlpack": {
+    "installedVersion": 1
+  },
+  "discord_spellcheck": {
+    "installedVersion": 0,
+    "updateVersion": 1,
+    "updateZipfile": "/home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip"
+  },
+  "discord_utils": {
+    "installedVersion": 0,
+    "updateVersion": 1,
+    "updateZipfile": "/home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip"
+  },
+  "discord_voice": {
+    "installedVersion": 0
+  }
+}

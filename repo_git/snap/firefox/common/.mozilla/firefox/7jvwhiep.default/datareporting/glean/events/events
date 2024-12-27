@@ -1,0 +1,4 @@
+{"timestamp":466626,"category":"webcompatreporting","name":"reason_dropdown","extra":{"setting":"required"}}
+{"timestamp":466984,"category":"nimbus_events","name":"is_ready"}
+{"timestamp":467150,"category":"nimbus_events","name":"exposure","extra":{"experiment":"discovery-of-search-sap-early-day-it-de-fr","branch":"control","feature_id":"fxms-message-2"}}
+{"timestamp":473110,"category":"urlbar","name":"engagement","extra":{"groups":"heuristic,general","search_engine_default_id":"google-ubuntu-sn","search_mode":"","selected_position":"1","engagement_type":"enter","interaction":"typed","sap":"urlbar_newtab","n_words":"1","selected_result_subtype":"","n_results":"2","n_chars":"10","results":"url,search_engine","selected_result":"url","provider":"HeuristicFallback"}}

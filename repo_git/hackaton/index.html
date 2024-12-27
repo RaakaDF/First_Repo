@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demande de Ressources</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<style>
+    body {
+        background-color: rgb(186, 233, 241);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+#formBox {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#formBox h1 {
+    text-align: center;
+    margin-top: 0;
+}
+
+#formBox #successMessage {
+    text-align: center;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 30px;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+textarea {
+    height: 100px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.removeResourceBtn {
+    padding: 0 10px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.invalid {
+    border-color: #f44336;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 5px;
+}
+
+#resourcesContainer {
+    margin-bottom: 20px;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+}
+
+#addResourceBtn {
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+#successMessage {
+    text-align: center;
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    margin-top: 20px;
+}
+#email {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    #usage {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    #time {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+</style>
+<body>
+<div id="formBox">
+    <h1>Demande d'allocation de ressources</h1>
+    <form id="reservationForm" onsubmit="return validateForm()">
+        <label for="email">Adresse e-mail :</label>
+        <input type="email" id="email" name="email" required>
+    <div id="resourcesContainer">
+        <div class="resource-item">
+            <label for="resource1">Ressource demandée :</label>
+            <select id="resource1" name="resource[]" required>
+                <option value="">Sélectionnez une ressource</option>
+                <option value="Ressource 1">Salle informatique 1</option>
+          <option value="Ressource 2">Salle informatique 2</option>
+          <option value="Ressource 3">Salle de réunion 1</option>
+          <option value="Ressource 1">Salle de réunion 2</option>
+          <option value="Ressource 2">Lounge</option>
+          <option value="Ressource 3">Silence room</option>
+          <option value="Ressource 1">Projecteur</option>
+          <option value="Ressource 2">Tableau d'étude</option>
+          <option value="Ressource 3">Baffle</option>
+            </select>
+            <button class="removeResourceBtn hidden" onclick="removeResource(event)">Supprimer</button>
+        </div>
+    </div>
+    <button id="addResourceBtn" onclick="addResource(event)">Ajouter une ressource</button>
+
+    <label for="date">Date :</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="acquisitionTime">Heure d'acquisition :</label>
+    <input type="time" id="acquisitionTime" name="acquisitionTime" required>
+    <label for="time">Temps d'utilisation :</label>
+    <input type="time" id="time" name="time" required>
+
+    <label for="usageType">Type d'utilisation :</label>
+    <select id="usageType" name="usageType" required>
+        <option value="">Sélectionnez un type d'utilisation</option>
+        <option value="Personnel">Personnel</option>
+        <option value="Groupe">Groupe</option>
+        <option value="Club">Club</option>
+    </select>
+
+    <label for="additionalNotes">Raison de la demande :</label>
+    <textarea id="additionalNotes" name="additionalNotes"></textarea>
+
+    <label for="people">Nombre de personnes :</label>
+    <input type="number" id="people" name="people" min="1">
+
+    <button type="submit">Envoyer</button>
+</form>
+<div id="successMessage" class="hidden">Votre demande a été soumise avec succès !</div>
+</div>
+<script>
+    var resourceCounter = 1;
+
+    // Fonction pour ajouter une ressource
+function addResource() {
+  const resourcesContainer = document.getElementById("resourcesContainer");
+  const resourceItem = document.createElement('div');
+  resourceItem.classList.add('resource-item');
+  resourceItem.innerHTML = `
+    <label for="resource${resourceCounter}">Ressource demandée :</label>
+    <select id="resource${resourceCounter}" name="resource[]" required>
+      <option value="">Sélectionnez une ressource</option>
+          <option value="Ressource 1">Salle informatique 1</option>
+          <option value="Ressource 2">Salle informatique 2</option>
+          <option value="Ressource 3">Salle de réunion 1</option>
+          <option value="Ressource 1">Salle de réunion 2</option>
+          <option value="Ressource 2">Lounge</option>
+          <option value="Ressource 3">Silence room</option>
+          <option value="Ressource 1">Projecteur</option>
+          <option value="Ressource 2">Tableau d'étude</option>
+          <option value="Ressource 3">Baffle</option>
+    </select>
+    <button class="removeResourceBtn" type="button" onclick="removeResource(event)">Supprimer la ressource</button>
+  `;
+  resourcesContainer.appendChild(resourceItem);
+  resourceCounter++;
+}
+
+    // Fonction pour supprimer une ressource
+function removeResource(e) {
+  const resourceItem = e.target.closest('.resource-item');
+  const resourcesContainer = document.getElementById("resourcesContainer");
+  resourcesContainer.removeChild(resourceItem);
+  updateRemoveButtonsVisibility();
+}
+
+    function updateRemoveButtonsVisibility() {
+        var removeButtons = document.getElementsByClassName('removeResourceBtn');
+        if (removeButtons.length > 1) {
+            for (var i = 0; i < removeButtons.length; i++) {
+                removeButtons[i].classList.remove('hidden');
+            }
+        } else {
+            removeButtons[0].classList.add('hidden');
+        }
+    }
+
+    function validateForm() {
+        var emailInput = document.getElementById('email');
+        var email = emailInput.value.trim();
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var resources = document.getElementsByName('resource[]');
+        var dateInput = document.getElementById('date');
+        var date = dateInput.value;
+        var acquisitionTimeInput = document.getElementById('acquisitionTime');
+        var acquisitionTime = acquisitionTimeInput.value;
+        var usageTypeInput = document.getElementById('usageType');
+        var usageType = usageTypeInput.value;
+
+        var valid = true;
+
+        if (!emailRegex.test(email)) {
+            valid = false;
+            emailInput.classList.add('invalid');
+        } else {
+            emailInput.classList.remove('invalid');
+        }
+
+        for (var i = 0; i < resources.length; i++) {
+            var resource = resources[i].value;
+            if (resource === '') {
+                valid = false;
+                resources[i].classList.add('invalid');
+            } else {
+                resources[i].classList.remove('invalid');
+            }
+        }
+
+        if (date === '') {
+            valid = false;
+            dateInput.classList.add('invalid');
+        } else {
+            dateInput.classList.remove('invalid');
+        }
+
+        if (acquisitionTime === '') {
+            valid = false;
+            acquisitionTimeInput.classList.add('invalid');
+        } else {
+            acquisitionTimeInput.classList.remove('invalid');
+        }
+
+        if (usageType === '') {
+            valid = false;
+            usageTypeInput.classList.add('invalid');
+        } else {
+            usageTypeInput.classList.remove('invalid');
+        }
+
+        if (valid) {
+            showSuccessMessage();
+        }
+
+        return valid;
+    }
+
+    function showSuccessMessage() {
+  var email = document.getElementById('email').value;
+  var resources = document.querySelectorAll('input[name="resource"]:checked');
+  var selectedResources = [];
+  resources.forEach(function(resource) {
+    selectedResources.push(resource.value);
+  });
+  var date = document.getElementById('date').value;
+  var acquisitionTime = document.getElementById('acquisitionTime').value;
+  var time = document.getElementById('time').value;
+  var usageType = document.getElementById('usageType').value;
+  var additionalNotes = document.getElementById('additionalNotes').value;
+  var people = document.getElementById('people').value;
+
+  window.location.href = "next.html?email=" + encodeURIComponent(email) +
+    "&resource=" + encodeURIComponent(selectedResources.join(',')) +
+    "&date=" + encodeURIComponent(date) +
+    "&acquisitionTime=" + encodeURIComponent(acquisitionTime) +
+    "&time=" + encodeURIComponent(time) +
+    "&usageType=" + encodeURIComponent(usageType) +
+    "&additionalNotes=" + encodeURIComponent(additionalNotes) +
+    "&people=" + encodeURIComponent(people);
+}
+
+</script>
+</body>
+</html>

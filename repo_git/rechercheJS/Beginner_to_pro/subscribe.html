@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe Button</title>
+    <style>
+        .js-sub-button {
+            border: none;
+            padding: 10px 15px;
+            background-color: #00C6C0;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+        }
+        .is-subscribed {
+            color: white;
+            background-color: #04224B;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="Subs();" onkeydown="if(event.key === 'Enter') {Subs()}" class="js-sub-button">Subscribe</button>
+
+    <p>Price Calculator</p>
+    <input placeholder="Prix element1" class="js-prix1" onkeydown="ButtonKeydown();">
+    <input placeholder="Prix element2" class="js-prix2" onkeydown="ButtonKeydown();">
+    <button onclick="ButtonCalcule();" class="calc-butt">Calculer</button>
+
+    <!-- Place to show the result -->
+    <p id="resultat"></p>
+
+    <script>
+        // fonction pour le bouton Subscribe
+        function Subs() {
+            const subsbutton = document.querySelector('.js-sub-button');
+
+            if (subsbutton.innerHTML === 'Subscribe') {
+                subsbutton.innerHTML = 'Subscribed';
+                subsbutton.classList.add('is-subscribed')
+            } else {
+                subsbutton.innerHTML = 'Subscribe';
+                subsbutton.classList.remove('is-subscribed')
+            }
+        }
+
+        // fonction pour le bouton Calcule
+        function ButtonCalcule() {
+            const btncalc = document.querySelector('.calc-butt');
+
+            if (btncalc) {
+                CalculerPrix();
+            }
+
+        }
+
+        function ButtonKeydown(event) {
+            if (event.key === 'Enter') {
+                CalculerPrix();
+            }
+        }
+
+        function CalculerPrix() {
+            const prix1 = Number(document.querySelector('.js-prix1').value);
+            const prix2 = Number(document.querySelector('.js-prix2').value);
+            const resultatElement = document.getElementById('resultat');
+            
+            let prixtotal = prix1 + prix2;
+            let restotal = 0;
+            let message = '';
+
+            if (prixtotal < 20) {
+                restotal = prixtotal;
+                message = "Votre achat est de " + restotal + ". Le total de vos achats est inférieur à 20, pas de réduction.";
+            } else {
+                restotal = prixtotal - 10;
+                message = "Votre achat est de " + prixtotal + ". Le total de vos achats est supérieur à 20, vous avez une réduction de 10, ce qui revient à " + restotal + ".";
+            }
+
+            // Display the message in the page
+            resultatElement.textContent = message;
+        }
+    </script>
+</body>
+</html>

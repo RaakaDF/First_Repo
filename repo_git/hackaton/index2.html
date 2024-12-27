@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmation de la demande</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<style>
+body {
+  background-color: rgb(186, 233, 241);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#confirmationBox {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#confirmationBox h1 {
+  text-align: center;
+  margin-top: 0;
+}
+.success-message {
+  text-align: center;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#confirmationDetails {
+  margin-bottom: 20px;
+}
+
+#confirmationDetails p {
+  margin-bottom: 10px;
+}
+
+#confirmationDetails strong {
+  font-weight: bold;
+}
+
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+
+
+</style>
+<body>
+<div id="confirmationBox">
+    <h1>Confirmation de la demande</h1>
+    <div class="success-message">Votre demande a été acceptée !</div>
+
+    <div id="confirmationDetails">
+
+        <p><strong>Adresse e-mail : exemple@gmail.com</strong> <span id="email"></span></p>
+        <p><strong>Ressources demandées : Salle de reunion 1</strong></p>
+        <ul id="resources"></ul>
+        <p><strong>Date : 03/06/2023</strong> <span id="date"></span></p>
+        <p><strong>Heure d'acquisition : 12h00</strong> <span id="acquisitionTime"></span></p>
+        <p><strong>Temps d'utilisation : 2h</strong> <span id="time"></span></p>
+        <p><strong>Type d'utilisation : atelier du club</strong> <span id="usageType"></span></p>
+        <p><strong>Raison de la demande : organisation d'une master class</strong> <span id="additionalNotes"></span></p>
+        <p><strong>Nombre de personnes : 30</strong> <span id="people"></span></p>
+    </div>
+</div>
+
+<script>
+    function getQueryParam(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    function displayConfirmationDetails() {
+      var searchParams = new URLSearchParams(window.location.search);
+var email = searchParams.get('email');
+var resources = searchParams.get('resource');
+var date = searchParams.get('date');
+var acquisitionTime = searchParams.get('acquisitionTime');
+var time = searchParams.get('time');
+var usageType = searchParams.get('usageType');
+var additionalNotes = searchParams.get('additionalNotes');
+var people = searchParams.get('people');
+
+        document.getElementById('email').textContent = email;
+        document.getElementById('date').textContent = date;
+        document.getElementById('acquisitionTime').textContent = acquisitionTime;
+        document.getElementById('time').textContent = time;
+        document.getElementById('usageType').textContent = usageType;
+        document.getElementById('additionalNotes').textContent = additionalNotes;
+        document.getElementById('people').textContent = people;
+
+        var resourcesList = document.getElementById('resources');
+        var resourcesArray = resources.split(',');
+        for (var i = 0; i < resourcesArray.length; i++) {
+            var resource = resourcesArray[i];
+            var listItem = document.createElement('li');
+            listItem.textContent = resource;
+            resourcesList.appendChild(listItem);
+        }
+    }
+
+    displayConfirmationDetails();
+</script>
+</body>
+</html>

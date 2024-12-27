@@ -1,0 +1,385 @@
+2023-02-21T09:35:49.956Z [Modules] Modules initializing
+2023-02-21T09:35:49.956Z [Modules] Distribution: remote
+2023-02-21T09:35:49.956Z [Modules] Host updates: disabled
+2023-02-21T09:35:49.956Z [Modules] Module updates: enabled
+2023-02-21T09:35:49.957Z [Modules] Module install path: /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules
+2023-02-21T09:35:49.957Z [Modules] Module installed file path: /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/installed.json
+2023-02-21T09:35:49.957Z [Modules] Module download path: /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending
+2023-02-21T09:35:50.225Z [Modules] Bootstrapping...
+2023-02-21T09:35:50.226Z [Modules] Installing discord_desktop_core@0 from /snap/discord/150/usr/share/discord/resources/bootstrap/discord_desktop_core.zip
+2023-02-21T09:35:50.229Z [Modules] Failed installing discord_desktop_core@0: Error: ENOENT: no such file or directory, open '/snap/discord/150/usr/share/discord/resources/bootstrap/discord_desktop_core.zip'
+2023-02-21T09:35:50.230Z [Modules] Installing discord_erlpack@0 from /snap/discord/150/usr/share/discord/resources/bootstrap/discord_erlpack.zip
+2023-02-21T09:35:50.230Z [Modules] Failed installing discord_erlpack@0: Error: ENOENT: no such file or directory, open '/snap/discord/150/usr/share/discord/resources/bootstrap/discord_erlpack.zip'
+2023-02-21T09:35:50.231Z [Modules] Installing discord_spellcheck@0 from /snap/discord/150/usr/share/discord/resources/bootstrap/discord_spellcheck.zip
+2023-02-21T09:35:50.231Z [Modules] Failed installing discord_spellcheck@0: Error: ENOENT: no such file or directory, open '/snap/discord/150/usr/share/discord/resources/bootstrap/discord_spellcheck.zip'
+2023-02-21T09:35:50.231Z [Modules] Installing discord_utils@0 from /snap/discord/150/usr/share/discord/resources/bootstrap/discord_utils.zip
+2023-02-21T09:35:50.232Z [Modules] Failed installing discord_utils@0: Error: ENOENT: no such file or directory, open '/snap/discord/150/usr/share/discord/resources/bootstrap/discord_utils.zip'
+2023-02-21T09:35:50.232Z [Modules] Installing discord_voice@0 from /snap/discord/150/usr/share/discord/resources/bootstrap/discord_voice.zip
+2023-02-21T09:35:50.232Z [Modules] Failed installing discord_voice@0: Error: ENOENT: no such file or directory, open '/snap/discord/150/usr/share/discord/resources/bootstrap/discord_voice.zip'
+2023-02-21T09:35:50.232Z [Modules] Finished module installations. [success: 0] [failure: 5]
+2023-02-21T09:35:50.232Z [Modules] Host is up to date.
+2023-02-21T09:35:50.233Z [Modules] Checking for module updates at https://discord.com/api/modules/stable/versions.json
+2023-02-21T09:35:50.643Z [Modules] Module update available: discord_desktop_core@1 [installed: 0]
+2023-02-21T09:35:50.643Z [Modules] Module update available: discord_erlpack@1 [installed: 0]
+2023-02-21T09:35:50.643Z [Modules] Module update available: discord_spellcheck@1 [installed: 0]
+2023-02-21T09:35:50.644Z [Modules] Module update available: discord_utils@1 [installed: 0]
+2023-02-21T09:35:50.644Z [Modules] Module update available: discord_voice@1 [installed: 0]
+2023-02-21T09:35:50.645Z [Modules] Fetching discord_desktop_core@1 from https://discord.com/api/modules/stable/discord_desktop_core/1
+2023-02-21T09:35:50.645Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip
+2023-02-21T09:35:51.696Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 1%
+2023-02-21T09:35:51.699Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 2%
+2023-02-21T09:35:51.772Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 3%
+2023-02-21T09:35:51.834Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 4%
+2023-02-21T09:35:52.256Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 7%
+2023-02-21T09:35:52.257Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 11%
+2023-02-21T09:35:52.305Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 12%
+2023-02-21T09:35:52.331Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 13%
+2023-02-21T09:35:52.345Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 14%
+2023-02-21T09:35:52.447Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 16%
+2023-02-21T09:35:52.489Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 17%
+2023-02-21T09:35:52.520Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 18%
+2023-02-21T09:35:52.528Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 19%
+2023-02-21T09:35:52.558Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 20%
+2023-02-21T09:35:52.586Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 21%
+2023-02-21T09:35:52.851Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 24%
+2023-02-21T09:35:52.852Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 28%
+2023-02-21T09:35:53.040Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 31%
+2023-02-21T09:35:53.041Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 37%
+2023-02-21T09:35:53.062Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 38%
+2023-02-21T09:35:53.126Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 39%
+2023-02-21T09:35:53.133Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 40%
+2023-02-21T09:35:53.560Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 44%
+2023-02-21T09:35:53.561Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 52%
+2023-02-21T09:35:53.572Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 53%
+2023-02-21T09:35:53.610Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 54%
+2023-02-21T09:35:53.624Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 55%
+2023-02-21T09:35:53.644Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 56%
+2023-02-21T09:35:53.653Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 57%
+2023-02-21T09:35:53.695Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 58%
+2023-02-21T09:35:53.721Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 59%
+2023-02-21T09:35:53.782Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 60%
+2023-02-21T09:35:53.799Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 62%
+2023-02-21T09:35:53.810Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 63%
+2023-02-21T09:35:53.818Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 64%
+2023-02-21T09:35:53.856Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 65%
+2023-02-21T09:35:53.878Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 66%
+2023-02-21T09:35:53.886Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 67%
+2023-02-21T09:35:53.911Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 68%
+2023-02-21T09:35:53.916Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 69%
+2023-02-21T09:35:53.925Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 70%
+2023-02-21T09:35:53.931Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 71%
+2023-02-21T09:35:53.955Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 72%
+2023-02-21T09:35:54.009Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 73%
+2023-02-21T09:35:54.042Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 74%
+2023-02-21T09:35:54.073Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 75%
+2023-02-21T09:35:54.111Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 76%
+2023-02-21T09:35:54.119Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 77%
+2023-02-21T09:35:54.152Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 78%
+2023-02-21T09:35:54.290Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 81%
+2023-02-21T09:35:54.291Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 84%
+2023-02-21T09:35:54.326Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 85%
+2023-02-21T09:35:54.340Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 86%
+2023-02-21T09:35:54.359Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 87%
+2023-02-21T09:35:54.382Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 88%
+2023-02-21T09:35:54.413Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 89%
+2023-02-21T09:35:54.455Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 90%
+2023-02-21T09:35:54.464Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 91%
+2023-02-21T09:35:54.529Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 92%
+2023-02-21T09:35:54.540Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 94%
+2023-02-21T09:35:54.558Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 95%
+2023-02-21T09:35:54.585Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 96%
+2023-02-21T09:35:54.651Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 98%
+2023-02-21T09:35:54.661Z [Modules] Streaming discord_desktop_core@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip: 100%
+2023-02-21T09:35:54.664Z [Modules] Fetching discord_erlpack@1 from https://discord.com/api/modules/stable/discord_erlpack/1
+2023-02-21T09:35:54.665Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip
+2023-02-21T09:35:55.049Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 1%
+2023-02-21T09:35:55.211Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 5%
+2023-02-21T09:35:55.212Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 10%
+2023-02-21T09:35:55.240Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 11%
+2023-02-21T09:35:55.248Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 12%
+2023-02-21T09:35:55.301Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 13%
+2023-02-21T09:35:55.339Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 14%
+2023-02-21T09:35:55.384Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 15%
+2023-02-21T09:35:55.447Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 16%
+2023-02-21T09:35:55.454Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 17%
+2023-02-21T09:35:55.487Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 18%
+2023-02-21T09:35:55.548Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 20%
+2023-02-21T09:35:55.614Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 22%
+2023-02-21T09:35:55.653Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 23%
+2023-02-21T09:35:55.695Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 24%
+2023-02-21T09:35:55.727Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 25%
+2023-02-21T09:35:55.733Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 26%
+2023-02-21T09:35:55.748Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 27%
+2023-02-21T09:35:55.766Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 28%
+2023-02-21T09:35:56.083Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 30%
+2023-02-21T09:35:56.139Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 31%
+2023-02-21T09:35:56.140Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 38%
+2023-02-21T09:35:56.142Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 46%
+2023-02-21T09:35:56.170Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 48%
+2023-02-21T09:35:56.186Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 50%
+2023-02-21T09:35:56.211Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 52%
+2023-02-21T09:35:56.216Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 53%
+2023-02-21T09:35:56.256Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 54%
+2023-02-21T09:35:56.261Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 55%
+2023-02-21T09:35:56.280Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 56%
+2023-02-21T09:35:56.367Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 57%
+2023-02-21T09:35:56.379Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 58%
+2023-02-21T09:35:56.892Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 62%
+2023-02-21T09:35:56.893Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 68%
+2023-02-21T09:35:57.026Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 71%
+2023-02-21T09:35:57.028Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 79%
+2023-02-21T09:35:57.029Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 83%
+2023-02-21T09:35:57.049Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 84%
+2023-02-21T09:35:57.093Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 87%
+2023-02-21T09:35:57.110Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 88%
+2023-02-21T09:35:57.116Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 90%
+2023-02-21T09:35:57.171Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 91%
+2023-02-21T09:35:57.183Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 92%
+2023-02-21T09:35:57.191Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 93%
+2023-02-21T09:35:57.223Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 94%
+2023-02-21T09:35:57.390Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 98%
+2023-02-21T09:35:57.391Z [Modules] Streaming discord_erlpack@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip: 100%
+2023-02-21T09:35:57.393Z [Modules] Fetching discord_spellcheck@1 from https://discord.com/api/modules/stable/discord_spellcheck/1
+2023-02-21T09:35:57.394Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip
+2023-02-21T09:35:58.287Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 1%
+2023-02-21T09:35:58.289Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 2%
+2023-02-21T09:35:58.317Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 3%
+2023-02-21T09:35:58.436Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 4%
+2023-02-21T09:35:58.559Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 5%
+2023-02-21T09:35:58.727Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 6%
+2023-02-21T09:35:58.835Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 7%
+2023-02-21T09:35:58.939Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 8%
+2023-02-21T09:35:59.046Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 9%
+2023-02-21T09:35:59.449Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 10%
+2023-02-21T09:35:59.452Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 11%
+2023-02-21T09:35:59.489Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 12%
+2023-02-21T09:35:59.578Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 13%
+2023-02-21T09:35:59.694Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 14%
+2023-02-21T09:35:59.965Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 15%
+2023-02-21T09:35:59.967Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 16%
+2023-02-21T09:36:00.279Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 17%
+2023-02-21T09:36:00.483Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 19%
+2023-02-21T09:36:00.501Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 20%
+2023-02-21T09:36:01.369Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 21%
+2023-02-21T09:36:01.371Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 22%
+2023-02-21T09:36:01.372Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 23%
+2023-02-21T09:36:01.384Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 24%
+2023-02-21T09:36:02.258Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 25%
+2023-02-21T09:36:02.260Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 27%
+2023-02-21T09:36:02.602Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 28%
+2023-02-21T09:36:03.043Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 29%
+2023-02-21T09:36:03.044Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 30%
+2023-02-21T09:36:03.320Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 31%
+2023-02-21T09:36:03.322Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 32%
+2023-02-21T09:36:03.323Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 33%
+2023-02-21T09:36:03.332Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 34%
+2023-02-21T09:36:03.458Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 35%
+2023-02-21T09:36:04.169Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 36%
+2023-02-21T09:36:04.214Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 37%
+2023-02-21T09:36:04.402Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 38%
+2023-02-21T09:36:04.447Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 39%
+2023-02-21T09:36:05.401Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 40%
+2023-02-21T09:36:05.513Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 41%
+2023-02-21T09:36:05.586Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 42%
+2023-02-21T09:36:05.620Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 43%
+2023-02-21T09:36:06.251Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 45%
+2023-02-21T09:36:06.372Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 46%
+2023-02-21T09:36:06.936Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 47%
+2023-02-21T09:36:06.937Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 48%
+2023-02-21T09:36:07.088Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 49%
+2023-02-21T09:36:07.402Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 51%
+2023-02-21T09:36:08.038Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 52%
+2023-02-21T09:36:08.700Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 53%
+2023-02-21T09:36:08.783Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 54%
+2023-02-21T09:36:09.473Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 55%
+2023-02-21T09:36:09.681Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 56%
+2023-02-21T09:36:09.683Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 57%
+2023-02-21T09:36:09.780Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 58%
+2023-02-21T09:36:09.781Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 59%
+2023-02-21T09:36:09.782Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 60%
+2023-02-21T09:36:09.823Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 61%
+2023-02-21T09:36:09.976Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 62%
+2023-02-21T09:36:10.096Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 63%
+2023-02-21T09:36:10.339Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 64%
+2023-02-21T09:36:10.635Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 65%
+2023-02-21T09:36:11.853Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 66%
+2023-02-21T09:36:11.855Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 67%
+2023-02-21T09:36:11.856Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 68%
+2023-02-21T09:36:12.729Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 69%
+2023-02-21T09:36:12.730Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 70%
+2023-02-21T09:36:16.893Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 71%
+2023-02-21T09:36:16.893Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 72%
+2023-02-21T09:36:16.894Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 73%
+2023-02-21T09:37:06.901Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 74%
+2023-02-21T09:38:09.086Z [Modules] Modules initializing
+2023-02-21T09:38:09.086Z [Modules] Distribution: remote
+2023-02-21T09:38:09.086Z [Modules] Host updates: disabled
+2023-02-21T09:38:09.086Z [Modules] Module updates: enabled
+2023-02-21T09:38:09.086Z [Modules] Module install path: /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules
+2023-02-21T09:38:09.086Z [Modules] Module installed file path: /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/installed.json
+2023-02-21T09:38:09.086Z [Modules] Module download path: /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending
+2023-02-21T09:38:09.200Z [Modules] Installing updates...
+2023-02-21T09:38:09.200Z [Modules] Installing discord_desktop_core@1 from /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_desktop_core-1.zip
+2023-02-21T09:38:09.274Z [Modules] Installing discord_erlpack@1 from /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_erlpack-1.zip
+2023-02-21T09:38:09.321Z [Modules] Finished module installations. [success: 2] [failure: 0]
+2023-02-21T09:38:09.322Z [Modules] Host is up to date.
+2023-02-21T09:38:09.322Z [Modules] Checking for module updates at https://discord.com/api/modules/stable/versions.json
+2023-02-21T09:38:09.326Z [Modules] Module update available: discord_spellcheck@1 [installed: 0]
+2023-02-21T09:38:09.326Z [Modules] Module update available: discord_utils@1 [installed: 0]
+2023-02-21T09:38:09.327Z [Modules] Module update available: discord_voice@1 [installed: 0]
+2023-02-21T09:38:09.327Z [Modules] Fetching discord_spellcheck@1 from https://discord.com/api/modules/stable/discord_spellcheck/1
+2023-02-21T09:38:09.327Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip
+2023-02-21T09:38:09.967Z [Modules] Streaming discord_spellcheck@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_spellcheck-1.zip: 100%
+2023-02-21T09:39:06.238Z [Modules] Fetching discord_utils@1 from https://discord.com/api/modules/stable/discord_utils/1
+2023-02-21T09:39:06.239Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip
+2023-02-21T09:39:08.589Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 1%
+2023-02-21T09:39:09.172Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 2%
+2023-02-21T09:39:11.842Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 3%
+2023-02-21T09:39:17.596Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 5%
+2023-02-21T09:39:17.597Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 7%
+2023-02-21T09:39:17.772Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 8%
+2023-02-21T09:39:17.897Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 9%
+2023-02-21T09:39:18.120Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 10%
+2023-02-21T09:39:18.423Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 11%
+2023-02-21T09:39:18.677Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 12%
+2023-02-21T09:39:18.820Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 13%
+2023-02-21T09:39:19.240Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 14%
+2023-02-21T09:39:19.474Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 15%
+2023-02-21T09:39:31.248Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 16%
+2023-02-21T09:39:31.454Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 17%
+2023-02-21T09:39:31.558Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 18%
+2023-02-21T09:39:31.830Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 20%
+2023-02-21T09:39:31.933Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 21%
+2023-02-21T09:39:32.038Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 22%
+2023-02-21T09:39:32.094Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 23%
+2023-02-21T09:39:32.185Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 24%
+2023-02-21T09:39:32.294Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 25%
+2023-02-21T09:39:32.367Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 26%
+2023-02-21T09:39:32.396Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 27%
+2023-02-21T09:39:32.549Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 28%
+2023-02-21T09:39:32.916Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 30%
+2023-02-21T09:39:33.095Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 31%
+2023-02-21T09:39:33.100Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 32%
+2023-02-21T09:39:33.173Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 33%
+2023-02-21T09:39:35.178Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 34%
+2023-02-21T09:39:42.529Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 35%
+2023-02-21T09:39:42.570Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 36%
+2023-02-21T09:39:42.720Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 37%
+2023-02-21T09:39:42.823Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 38%
+2023-02-21T09:39:42.847Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 39%
+2023-02-21T09:39:42.878Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 40%
+2023-02-21T09:39:42.920Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 41%
+2023-02-21T09:39:42.981Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 42%
+2023-02-21T09:39:43.137Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 43%
+2023-02-21T09:39:43.234Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 44%
+2023-02-21T09:39:43.256Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 46%
+2023-02-21T09:39:43.352Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 48%
+2023-02-21T09:39:43.356Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 49%
+2023-02-21T09:39:43.436Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 50%
+2023-02-21T09:39:43.505Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 51%
+2023-02-21T09:39:43.510Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 52%
+2023-02-21T09:39:43.668Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 53%
+2023-02-21T09:39:43.787Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 55%
+2023-02-21T09:39:43.800Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 56%
+2023-02-21T09:39:43.913Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 57%
+2023-02-21T09:39:43.928Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 58%
+2023-02-21T09:39:43.989Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 59%
+2023-02-21T09:39:44.044Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 60%
+2023-02-21T09:39:44.119Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 61%
+2023-02-21T09:39:44.196Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 62%
+2023-02-21T09:39:44.472Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 64%
+2023-02-21T09:39:44.524Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 65%
+2023-02-21T09:39:44.577Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 66%
+2023-02-21T09:39:44.641Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 67%
+2023-02-21T09:39:44.730Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 68%
+2023-02-21T09:39:44.888Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 69%
+2023-02-21T09:39:45.921Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 70%
+2023-02-21T09:39:58.486Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 71%
+2023-02-21T09:40:29.320Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 72%
+2023-02-21T09:40:29.984Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 73%
+2023-02-21T09:40:30.410Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 74%
+2023-02-21T09:40:30.772Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 75%
+2023-02-21T09:40:31.047Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 76%
+2023-02-21T09:40:31.266Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 77%
+2023-02-21T09:40:31.562Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 79%
+2023-02-21T09:40:31.642Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 80%
+2023-02-21T09:40:31.756Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 81%
+2023-02-21T09:40:31.861Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 82%
+2023-02-21T09:40:31.951Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 83%
+2023-02-21T09:40:32.049Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 84%
+2023-02-21T09:40:32.100Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 85%
+2023-02-21T09:40:32.192Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 86%
+2023-02-21T09:40:32.291Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 87%
+2023-02-21T09:40:32.382Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 88%
+2023-02-21T09:40:32.562Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 89%
+2023-02-21T09:40:32.665Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 90%
+2023-02-21T09:40:32.707Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 91%
+2023-02-21T09:40:32.753Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 92%
+2023-02-21T09:40:33.018Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 94%
+2023-02-21T09:40:33.088Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 95%
+2023-02-21T09:40:33.186Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 96%
+2023-02-21T09:40:33.336Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 98%
+2023-02-21T09:40:33.412Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 99%
+2023-02-21T09:40:33.460Z [Modules] Streaming discord_utils@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_utils-1.zip: 100%
+2023-02-21T09:40:33.463Z [Modules] Fetching discord_voice@1 from https://discord.com/api/modules/stable/discord_voice/1
+2023-02-21T09:40:33.464Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip
+2023-02-21T09:40:34.825Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 1%
+2023-02-21T09:40:35.988Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 2%
+2023-02-21T09:40:36.181Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 3%
+2023-02-21T09:40:36.392Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 4%
+2023-02-21T09:40:36.679Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 5%
+2023-02-21T09:40:37.220Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 6%
+2023-02-21T09:40:37.282Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 7%
+2023-02-21T09:40:37.687Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 8%
+2023-02-21T09:40:37.873Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 9%
+2023-02-21T09:40:38.382Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 10%
+2023-02-21T09:40:39.239Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 11%
+2023-02-21T09:40:39.357Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 12%
+2023-02-21T09:40:39.977Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 13%
+2023-02-21T09:40:41.169Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 14%
+2023-02-21T09:40:41.878Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 15%
+2023-02-21T09:40:41.879Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 16%
+2023-02-21T09:40:42.122Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 17%
+2023-02-21T09:40:42.429Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 18%
+2023-02-21T09:40:42.942Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 19%
+2023-02-21T09:40:44.019Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 20%
+2023-02-21T09:40:44.419Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 21%
+2023-02-21T09:40:44.505Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 22%
+2023-02-21T09:40:44.864Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 23%
+2023-02-21T09:40:45.430Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 24%
+2023-02-21T09:40:46.585Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 25%
+2023-02-21T09:40:46.586Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 26%
+2023-02-21T09:40:47.154Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 27%
+2023-02-21T09:40:47.156Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 28%
+2023-02-21T09:40:47.512Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 29%
+2023-02-21T09:40:47.811Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 30%
+2023-02-21T09:40:48.993Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 31%
+2023-02-21T09:40:49.160Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 32%
+2023-02-21T09:40:49.162Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 33%
+2023-02-21T09:40:49.757Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 34%
+2023-02-21T09:40:50.011Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 35%
+2023-02-21T09:40:50.422Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 36%
+2023-02-21T09:40:50.460Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 37%
+2023-02-21T09:40:50.709Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 38%
+2023-02-21T09:40:50.844Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 39%
+2023-02-21T09:40:51.069Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 40%
+2023-02-21T09:40:51.154Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 41%
+2023-02-21T09:40:51.461Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 42%
+2023-02-21T09:40:51.480Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 43%
+2023-02-21T09:40:51.619Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 44%
+2023-02-21T09:40:51.735Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 45%
+2023-02-21T09:40:52.018Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 46%
+2023-02-21T09:40:52.044Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 47%
+2023-02-21T09:40:52.358Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 48%
+2023-02-21T09:40:52.393Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 49%
+2023-02-21T09:40:52.890Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 50%
+2023-02-21T09:40:53.228Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 51%
+2023-02-21T09:40:53.502Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 52%
+2023-02-21T09:40:53.504Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 53%
+2023-02-21T09:40:53.506Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 54%
+2023-02-21T09:40:53.591Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 55%
+2023-02-21T09:40:53.772Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 56%
+2023-02-21T09:40:57.445Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 57%
+2023-02-21T09:40:59.055Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 58%
+2023-02-21T09:40:59.676Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 59%
+2023-02-21T09:41:02.669Z [Modules] Streaming discord_voice@1 to /home/digifemmes-22lab050/snap/discord/150/.config/discord/0.0.25/modules/pending/discord_voice-1.zip: 60%

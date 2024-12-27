@@ -1,0 +1,2006 @@
+
+
+const postsContainer = document.querySelector('.posts-container');
+const createPostContainer = document.querySelector(".create-post-container");
+const postContainer = document.querySelector(".post-container");
+const contentWrapper = document.querySelector('.content-wrapper');
+const registerContainer = document.querySelector('.register-container');
+const signinContainer = document.querySelector('.signin');
+const signupNav = document.querySelector('.signup-nav');
+const logoutNav = document.querySelector('.logout-nav');
+const onlineUsers = document.querySelector('.online-users');
+const offlineUsers = document.querySelector('.offline-users');
+const commentsContainer = document.querySelector('.comments-container');
+const topPanel = document.querySelector('.top-panel');
+const newPostNotif= document.querySelector('.new-post-notif-wrapper');
+const msgNotif = document.querySelector(".msg-notification");
+
+let counter = 0
+var unread = []
+
+var conn;
+var currId = 0
+var currUsername = ""
+var currPost = 0
+
+var allPosts = []
+var filteredPosts = []
+
+var allUsers = []
+var online = []
+
+var currComments = []
+
+//POST fetch function
+async function postData(url = '', data = {}) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    console.log('posted')
+
+    return response.json()
+}
+
+  
+
+//GET fetch function
+async function getData(url = '') {
+    console.log('getting', url)
+    const response = await fetch(url, {
+        method: 'GET'
+    })
+
+    return response.json()
+}
+
+
+async function getPosts() {
+    await getData('http://localhost:8000/post')
+    .then(value => {
+        allPosts = value
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+async function getUsers() {
+    await getData('http://localhost:8000/user')
+    .then(value => {
+        allUsers = value
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+  
+  
+
+async function getComments(post_id) {
+    await getData('http://localhost:8000/comment?param=post_id&data='+post_id)
+    .then(value => {
+        currComments = value
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+async function updateUsers() {
+    await getData('http://localhost:8000/chat?user_id=' + currId)
+        .then(value => {
+            var newUsers = []
+
+            if (value.user_ids != null) {
+                newUsers = value.user_ids.map((i) => {
+                    return allUsers.filter(u => u && u.id == i)[0]
+                })
+            }
+
+            let otherUsers = allUsers.filter(x => !newUsers.includes(x))
+
+            allUsers = newUsers.concat(otherUsers)
+
+            createUsers(allUsers, conn)
+        }).catch(err => {
+            console.log(err)
+        })
+}
+
+
+function startWS() {
+    if (window["WebSocket"]) {
+        conn = new WebSocket("ws://" + document.location.host + "/ws");
+
+        conn.onopen = function() {
+            console.log("WebSocket connection is open");
+            createUsers(allUsers, conn);
+        };
+
+        conn.onclose = function(evt) {
+            // Handle WebSocket connection close
+            console.log("WebSocket connection is closed");
+        };
+
+        conn.onmessage = function(evt) {
+            var data = JSON.parse(evt.data);
+            console.log(data);
+
+            if (data.msg_type === "msg") {
+                // Handle message logs
+                var senderContainer = document.createElement("div");
+                senderContainer.className = (data.sender_id == currId) ? "sender-container" : "receiver-container";
+                var sender = document.createElement("div");
+                sender.className = (data.sender_id == currId) ? "sender" : "receiver";
+                sender.innerText = data.content;
+                var date = document.createElement("div");
+                date.className = "chat-time";
+                date.innerText = data.date.slice(0, -3);
+                appendLog(senderContainer, sender, date);
+
+                    // Call CreateMessages to append the new message to the chatbox
+                    //CreateMessages(data, currId);
+
+                if (data.sender_id == currId) {
+                    return;
+                }
+
+                let unreadMsgs = unread.filter((u) => {
+                    id = data.sender_id;
+                    return u[0] == id;
+                });
+
+                if (document.querySelector('.chat-wrapper').style.display == "none") {
+                    if (unreadMsgs.length == 0) {
+                        unread.push([data.sender_id, 1]);
+                    } else {
+                        unreadMsgs[0][1] += 1;
+                    }
+                }
+
+                updateUsers();
+            } else if (data.msg_type === "online") {
+                // Handle online status updates
+                online = data.user_ids;
+                getUsers().then(function() {
+                    updateUsers();
+                });
+            } else if (data.msg_type === "post") {
+                // Handle post notifications
+                newPostNotif.style.display = "flex";
+        
+            } else if (data.msg_type === "") {
+                // Handle typing status updates
+                if (data.is_typing) {
+                    console.log("User " + data.sender_id + " started typing");
+                    document.querySelector("#typing-indicator").style.display = "block";
+                    document.querySelector("#typing-text").textContent = "is typing";
+                    var typingInterval = 2000; 
+                    animateDots(typingInterval);
+                } else {
+                    console.log("User " + data.sender_id + " stopped typing");
+                    document.querySelector("#typing-indicator").style.display = "none";
+                }
+            }
+        };
+    } else {
+        var item = document.createElement("div");
+        item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
+        appendLog(item);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async function() {
+    await getPosts();
+    await getUsers();
+
+    document.querySelector('.chat-wrapper').style.display = "none";
+
+    let sess;
+    try {
+        sess = await postData('http://localhost:8000/session');
+    } catch (error) {
+        // Handle the absence of session cookie here
+        // For example, you can redirect the user to the login page or display a message
+        console.log("Session cookie not found or expired");
+        return;
+    }
+
+    let vals = sess.msg.split("|");
+    currId = parseInt(vals[0]);
+    currUsername = vals[1];
+
+    signinContainer.style.display = "none";
+    signupNav.style.display = "none";
+    contentWrapper.style.display = "flex";
+    logoutNav.style.display = "flex";
+
+    document.querySelector('.profile').innerText = currUsername;
+    startWS();
+
+    createPosts(allPosts);
+    updateUsers();
+});
+
+
+function createPost(postdata) {
+
+    document.querySelector('#title').innerHTML = postdata.title
+    document.querySelector('#username').innerHTML = allUsers.filter(u => {return u.id == postdata.user_id})[0].username
+    document.querySelector('#date').innerHTML = (postdata.date).slice(0, -3)
+    document.querySelector('.category').innerHTML = postdata.category
+    document.querySelector('.full-content').innerHTML = postdata.content
+    document.getElementById('post-likes').innerHTML = postdata.likes
+    document.getElementById('post-dislikes').innerHTML = postdata.dislikes
+}
+
+function createComments(commentsdata) {
+    commentsContainer.innerHTML = ""
+    if (commentsdata == null) {
+        return
+    }
+
+    commentsdata.map(({id, post_id, user_id, content, date}) =>{
+        var commentWrapper = document.createElement("div");
+        commentWrapper.className = "comment-wrapper"
+        commentsContainer.appendChild(commentWrapper)
+        var userImg = document.createElement("img");
+        userImg.src = "./frontend/assets/profile7.svg"
+        commentWrapper.appendChild(userImg)
+        var comment = document.createElement("div");
+        comment.className = "comment"
+        commentWrapper.appendChild(comment)
+        var commentUserWrapper = document.createElement("div");
+        commentUserWrapper.className = "comment-user-wrapper"
+        comment.appendChild(commentUserWrapper)
+        var commentUsername = document.createElement("div");
+        commentUsername.className = "comment-username"
+        commentUsername.innerText = allUsers.filter(u => {return u.id == user_id})[0].username
+        commentUserWrapper.appendChild(commentUsername)
+        var commentDate = document.createElement("div");
+        commentDate.className = "comment-date"
+        commentDate.innerHTML = date.slice(0, -3)
+        commentUserWrapper.appendChild(commentDate)
+        var commentSpan = document.createElement("div");
+        commentSpan.innerHTML = content
+        comment.appendChild(commentSpan)
+    })
+}
+
+function createPosts(postdata) {
+    postsContainer.innerHTML = ""
+
+    if (postdata == null) {
+        return
+    }
+
+    postdata.map(async ({id, user_id, category, title, content, date, likes, dislikes}) => {
+        await getComments(id)
+
+        var post = document.createElement("div");
+        post.className = "post"
+        post.setAttribute("id", id)
+        postsContainer.appendChild(post)
+        var posttitle = document.createElement("div");
+        posttitle.className = "title"
+        posttitle.innerText = title
+        post.appendChild(posttitle)
+        var author = document.createElement("div");
+        author.className = "author"
+        post.append(author)
+        var img = document.createElement("img");
+        img.src = "./frontend/assets/profile7.svg"
+        author.appendChild(img)
+        var user = document.createElement("div");
+        user.className = "post-username"
+        user.innerHTML = allUsers.filter(u => {return u.id == user_id})[0].username
+        author.appendChild(user)
+        var postdate = document.createElement("div");
+        postdate.className = "date"
+        postdate.innerText = date.slice(0, -3)
+        author.appendChild(postdate)
+        var postcontent = document.createElement("div");
+        postcontent.className = "post-body"
+        postcontent.innerText = content
+        post.append(postcontent)  
+        var commentsWrapper = document.createElement("div");
+        commentsWrapper.className = "comments-wrapper"
+        post.appendChild(commentsWrapper)
+        var likesDislikesWrapper = document.createElement("div");
+        likesDislikesWrapper.className = "likes-dislikes-wrapper"
+        commentsWrapper.appendChild(likesDislikesWrapper)
+        var likesWrapper = document.createElement("div");
+        likesWrapper.className = "likes-wrapper"
+        likesDislikesWrapper.appendChild(likesWrapper)
+        var likesImg = document.createElement("img");
+        likesImg.src = "./frontend/assets/like3.svg"
+        likesWrapper.appendChild(likesImg)
+        var postlikes = document.createElement("div");
+        postlikes.className = "likes"
+        postlikes.innerText = likes
+        likesWrapper.appendChild(postlikes)
+        var dislikesWrapper = document.createElement("div");
+        dislikesWrapper.className = "likes-wrapper dislike"
+        likesDislikesWrapper.appendChild(dislikesWrapper)
+        var dislikesImg = document.createElement("img");
+        dislikesImg.src = "./frontend/assets/dislike4.svg"
+        dislikesWrapper.appendChild(dislikesImg)
+        var postdislikes = document.createElement("div");
+        postdislikes.className = "dislike"
+        postdislikes.innerText = dislikes
+        dislikesWrapper.appendChild(postdislikes)
+        var comments = document.createElement("div");
+        comments.className = "comments"
+        commentsWrapper.appendChild(comments)
+        var commentsImg = document.createElement("img");
+        commentsImg.src = "./frontend/assets/comment.svg"
+        comments.appendChild(commentsImg)
+        var comment = document.createElement("div");
+        comment.className = "comment"
+        comment.innerText = (currComments === null) ? "0 Comments" : currComments.length + " Comments"
+        comments.appendChild(comment)
+
+        post.addEventListener("click", async function(e) {
+            currPost = parseInt(post.getAttribute("id"))
+
+            await getComments(currPost)
+
+            createPost(allPosts.filter(p => {return p.id == currPost})[0])
+            createComments(currComments)
+            document.getElementById('post-comments').innerHTML = (currComments === null) ? "0 Comments" : currComments.length + " Comments"
+        
+            postsContainer.style.display = "none"
+            postContainer.style.display = "flex"
+            topPanel.style.display = "none"
+        })
+    })
+}
+var firstId = 512;
+
+function createUsers(userdata, conn) {
+    onlineUsers.innerHTML = ""
+    offlineUsers.innerHTML = ""
+
+    if (userdata == null) {
+        return
+    }
+
+    userdata.map(({id, username}) => {
+        if (id == currId) {
+            return
+        }
+
+        var user = document.createElement("div");
+        user.className = "user"
+        user.setAttribute("id", ('id'+id))
+
+        if (online.includes(id)) {
+            onlineUsers.appendChild(user)
+        } else {
+            offlineUsers.appendChild(user)
+        }
+
+        var userImg = document.createElement("img");
+        userImg.src = "./frontend/assets/profile4.svg"
+        user.appendChild(userImg)
+        var chatusername = document.createElement("p");
+        chatusername.innerText = username
+        user.appendChild(chatusername)
+        var msgNotification = document.createElement("div");
+        msgNotification.className = "msg-notification"
+        msgNotification.innerText = 1
+        user.appendChild(msgNotification)
+
+        let unreadMsgs = unread.filter((u) => {
+            return u[0] == id
+        })
+
+        if (unreadMsgs.length != 0 && unreadMsgs[0][1] != 0) {
+            const msgNotif =  document.getElementById('id'+id).querySelector('.msg-notification');
+            msgNotif.style.opacity = "1"
+            msgNotif.innerText = unreadMsgs[0][1]
+            
+            document.getElementById('id'+id).style.fontWeight = "900"
+        } 
+        
+
+        user.addEventListener("click", function(e) {
+            resetScroll();
+            console.log("user clicked on a profifle with the id of:", id);
+            if (typeof conn === "undefined") {
+                // Handle the case when the WebSocket connection is not yet established
+                console.log("WebSocket connection is not ready");
+                return;
+            }
+            
+            let resp = getData('http://localhost:8000/message?receiver=' + id+'&firstId='+ firstId);// Get the message logs from the database for the receiver ID
+            resp.then(value => {
+                let ridStr = user.getAttribute("id");
+                console.log("ridstr:", ridStr);
+                const regex = /id/i;
+                const rid = parseInt(ridStr.replace(regex, ''));
+                console.log("Opened chat with receiver ID:", rid);
+                if (value && value.length > 0) {
+                    const lastIndex = value.length - 1;
+                    firstId = value[lastIndex].id;
+                    lastFetchedId = firstId;
+                    console.log("createUser firstId", firstId);
+                  }
+                counter = 0;
+                document.getElementById('id'+id).querySelector(".msg-notification").style.opacity = "0";
+                OpenChat(rid, conn, value, currId, firstId);// Open chat window with the receiver ID and send the message logs
+
+                console.log("first fetch Message logs:", value);
+            }).catch();
+        });
+    })
+}
+
+
+var msg = document.getElementById("chat-input");
+var log = document.querySelector(".chat")
+
+function appendLog(container, msg, date) {
+    var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
+    log.appendChild(container);
+    container.append(msg);
+    msg.append(date)
+   
+    if (doScroll) {// Scroll to the bottom if scrolled near the bottom
+        log.scrollTop = log.scrollHeight - log.clientHeight;
+    }
+}
+
+document.getElementById("categories").onchange = function () {
+    let val = document.getElementById("categories").value
+
+    if (val == "all") {
+        createPosts(allPosts)
+        return
+    }
+
+    filteredPosts = allPosts.filter((i) => {
+        console.log(i.category)
+        return i.category == val
+    })
+    console.log(filteredPosts)
+    createPosts(filteredPosts)
+}
+
+document.getElementById("like-btn").addEventListener("click", () => {
+    let resp = postData('http://localhost:8000/like?post_id='+currPost+'&col=likes')
+    resp.then(value => {
+        let vals = value.msg.split("|")
+        document.getElementById('post-likes').innerHTML = parseInt(vals[0])
+        document.getElementById('post-dislikes').innerHTML = parseInt(vals[1])
+    }).catch()
+})
+
+document.getElementById("dislike-btn").addEventListener("click", () => {
+    let resp = postData('http://localhost:8000/like?post_id='+currPost+'&col=dislikes')
+    resp.then(value => {
+        let vals = value.msg.split("|")
+        document.getElementById('post-likes').innerHTML = parseInt(vals[0])
+        document.getElementById('post-dislikes').innerHTML = parseInt(vals[1])
+    }).catch()
+})
+
+//Sign in
+document.querySelector('.signin-btn').addEventListener("click", signIn);
+
+// Add keydown event listeners to the input fields
+document.querySelector('#email-username').addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        signIn();
+    }
+});
+document.querySelector('#signin-password').addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        signIn();
+    }
+});
+
+// Function to handle sign-in
+async function signIn() {
+    await getPosts();
+    await getUsers();
+
+    const emailUsername = document.querySelector('#email-username');
+    const signinPassword = document.querySelector('#signin-password');
+
+    const emailUsernameValue = emailUsername.value.trim();
+    const signinPasswordValue = signinPassword.value.trim();
+
+    // Check if any field is empty
+    if (emailUsernameValue === "" || signinPasswordValue === "") {
+        const errorMessageElement = document.querySelector('.error-message');
+        errorMessageElement.innerText = "Please fill in all fields.";
+        errorMessageElement.classList.add('show'); // Show the error message box
+
+        // Shake the empty field(s)
+        if (emailUsernameValue === "") {
+            shakeField(emailUsername);
+        }
+        if (signinPasswordValue === "") {
+            shakeField(signinPassword);
+        }
+
+        return;
+    }
+
+    let data = {
+        emailUsername: emailUsernameValue,
+        password: signinPasswordValue
+    };
+
+    const errorMessageElement = document.querySelector('.error-message');
+
+    postData('http://localhost:8000/login', data)
+        .then(resp => {
+            let vals = resp.msg.split("|");
+            currId = parseInt(vals[0]);
+            currUsername = vals[1];
+
+            document.querySelector('.profile').innerText = currUsername;
+
+            signinContainer.style.display = "none";
+            signupNav.style.display = "none";
+            contentWrapper.style.display = "flex";
+            logoutNav.style.display = "flex";
+
+            emailUsername.value = "";
+            signinPassword.value = "";
+
+            startWS();
+
+            createPosts(allPosts);
+            updateUsers();
+
+            // Clear the error message
+            errorMessageElement.innerText = "";
+            errorMessageElement.classList.remove('show'); // Hide the error message box
+        })
+        .catch(error => {
+            const errorMessage = "Username or password is incorrect.";
+            errorMessageElement.innerText = errorMessage;
+            errorMessageElement.classList.add('show'); // Show the error message box
+        });
+}
+
+// Function to shake a field
+function shakeField(field) {
+    field.classList.add('shake');
+    setTimeout(() => {
+        field.classList.remove('shake');
+    }, 500);
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Sign up/Sign in button + link
+    const signupLink = document.querySelector('#signup-link');
+    const signinLink = document.querySelector('#signin-link');
+    const signupBtn = document.querySelector('.signup-btn');
+    const successContainer = document.querySelector('.success-container');
+  
+    // Logic for displaying registerContainer and updating button text
+    signupLink.addEventListener('click', function() {
+      signinContainer.style.display = "none";
+      registerContainer.style.display = "block";
+      updateSignupButtonText("SIGN IN");
+    });
+  
+    // Logic for displaying signinContainer and updating button text
+    signinLink.addEventListener('click', function() {
+      signinContainer.style.display = "flex";
+      registerContainer.style.display = "none";
+      updateSignupButtonText("SIGN UP");
+    });
+  
+    // Logic for toggling between sign up and sign in
+    signupBtn.addEventListener("click", function() {
+      if (signupBtn.innerText === "SIGN UP") {
+        signinContainer.style.display = "none";
+        registerContainer.style.display = "block";
+        updateSignupButtonText("SIGN IN");
+      } else {
+        signinContainer.style.display = "flex";
+        registerContainer.style.display = "none";
+        updateSignupButtonText("SIGN UP");
+      }
+    });
+  
+    // Function to update the button text
+    function updateSignupButtonText(text) {
+      signupBtn.innerText = text;
+    }
+  
+    // Hide the success container when the "SIGN UP" button is clicked
+    signupBtn.addEventListener('click', function() {
+      successContainer.style.display = "none";
+    });
+  });
+
+// Register
+(function() {
+    const registerContainer = document.querySelector('.register-container');
+    const signinContainer = document.querySelector('.signin');
+
+    document.querySelector(".register-btn").addEventListener("click", function(e) {
+        e.preventDefault();
+
+        const fname = document.querySelector("#fname").value;
+        const lname = document.querySelector("#lname").value;
+        const email = document.querySelector("#email").value;
+        const username = document.querySelector("#register-username").value;
+        const age = document.querySelector("#age").value;
+        const gender = document.querySelector("#gender").value;
+        const password = document.querySelector("#register-password").value;
+
+        const errorMessageElement = document.querySelector('.error-message2');
+        errorMessageElement.innerText = ""; // Clear previous error message
+
+        let isValid = true;
+
+        if (fname === "") {
+            errorMessageElement.innerText = "Enter a firstname. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (lname === "") {
+            errorMessageElement.innerText += "Enter a surname. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (!isValidEmail(email)) {
+            errorMessageElement.innerText += "Enter a valid email address. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (username === "") {
+            errorMessageElement.innerText += "Enter a username. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (age === "") {
+            errorMessageElement.innerText += "Enter a DOB. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (gender === "") {
+            errorMessageElement.innerText += "Enter a gender. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (password === "") {
+            errorMessageElement.innerText += "Enter a password. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        // Check if password is at least 6 characters long
+        if (password.length < 6) {
+            errorMessageElement.innerText = "Password should be at least 6 characters long.";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            return;
+        }
+
+        // Check if email is valid using regex
+        if (!isValidEmail(email)) {
+            errorMessageElement.innerText = "Please enter a valid email address.";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            return;
+        }
+
+        let data = {
+            id: 0,
+            username: username,
+            firstname: fname,
+            surname: lname,
+            gender: gender,
+            email: email,
+            dob: age,
+            password: password
+        }
+
+        postData('http://localhost:8000/register', data)
+            .then(value => {
+                // Check if the response has an error property
+                if (value.error) {
+                    let customErrorMessage = "The email or username you entered is already taken.";
+                    errorMessageElement.innerText = customErrorMessage;
+                    errorMessageElement.classList.add('show'); // Show the error message box
+                    return;
+                }
+
+                const msg = value.msg;
+
+                // Hide register container
+                registerContainer.style.display = "none";
+
+                // Show successful registration container
+                const successContainer = document.querySelector('.success-container');
+                successContainer.style.display = "block";
+
+                // Update success message
+                const successMessage = document.querySelector('.success-message');
+                successMessage.innerText = msg;
+
+                // Button to reveal sign-in container
+                const signInButton = document.querySelector('.sign-in-button');
+                signInButton.addEventListener('click', function() {
+                    successContainer.style.display = "none";
+                    signinContainer.style.display = "flex";
+                });
+            })
+            // Catch any errors and display the error message
+            .catch(error => {
+                errorMessageElement.innerText = "The email or username you entered is already taken.";
+                errorMessageElement.classList.add('show'); // Show the error message box
+            });
+    });
+
+    // Function to check if email is valid
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Function to send POST request
+    function postData(url, data) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json());
+    }
+})();
+
+
+
+
+//New post button
+document.querySelector(".new-post-btn").addEventListener("click", function() {
+    postsContainer.style.display = "none"
+    postContainer.style.display = "none"
+    createPostContainer.style.display = "flex"
+    topPanel.style.display = "none"
+    const title = document.querySelector("#create-post-title").value = ""
+    const body = document.querySelector("#create-post-body").value = ""
+
+})
+
+//Create new post
+document.querySelector(".create-post-btn").addEventListener("click", function() {
+    const title = document.querySelector("#create-post-title").value
+    const body = document.querySelector("#create-post-body").value
+    const category = document.querySelector("#create-post-categories").value
+    let data = {
+        id: 0,
+        user_id: 0,
+        category: category,
+        title: title,
+        content: body,
+        date: '',
+        likes: 0,
+        dislikes: 0
+    }
+    
+    var msg
+    let resp = postData('http://localhost:8000/post', data)
+    resp.then(async value => {
+        msg = value.msg
+
+        await getPosts()
+        createPosts(allPosts)
+
+        sendMsg(conn, 0, {value: "New Post"}, 'post')
+
+        createPostContainer.style.display = "none"
+        postsContainer.style.display = "flex"
+        topPanel.style.display = "flex"
+        
+    })
+})
+
+//Comments
+document.querySelector(".send-comment-btn").addEventListener("click", sendComment)
+document.querySelector("#comment-input").addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+        sendComment();
+    }
+})
+
+function sendComment() {
+    let comment = document.querySelector("#comment-input").value
+    commentsdata = {
+        id: 0,
+        post_id: currPost,
+        user_id: currId,
+        content: comment,
+        date: ""
+    }
+    console.log(commentsdata)
+    
+    let resp = postData('http://localhost:8000/comment', commentsdata)
+    resp.then(async () => {
+        document.querySelector("#comment-input").value = ""
+
+        await getComments(currPost)
+        document.getElementById('post-comments').innerHTML = (currComments === null) ? "0 Comments" : currComments.length + " Comments"
+        createComments(currComments)
+    })
+}
+
+
+//Go back to home page when click on logo + back button
+document.querySelector(".logo").addEventListener("click", home)
+document.querySelector(".back").addEventListener("click", home)
+document.querySelector("#back-btn").addEventListener("click", home)
+
+async function home() {
+    selectCategories = document.getElementById("categories");
+    selectCategories.selectedIndex = 0;
+
+    await getPosts()
+    createPosts(allPosts)
+
+    createPostContainer.style.display = "none"
+    postContainer.style.display = "none"
+    postsContainer.style.display = "flex"
+    topPanel.style.display = "flex"
+    newPostNotif.style.display = "none"
+}
+
+newPostNotif.addEventListener('click', async function() {
+    
+    await getPosts()
+    createPosts(allPosts)
+    newPostNotif.style.display = "none"
+    window.scrollTo(0, 0);
+});
+
+function closeWS() {
+    if (conn.readyState === WebSocket.OPEN) {
+        conn.close()
+    }
+}
+
+//Log out btn
+document.querySelector(".logout-btn").addEventListener("click", function() {
+    var msg
+    var chatWrapper = document.querySelector(".chat-wrapper");
+    if (chatWrapper) {
+    chatWrapper.style.display = "none";
+    } 
+    let resp = postData('http://localhost:8000/logout')
+    resp.then(value => {
+        msg = value.msg
+        console.log(msg)
+
+        signinContainer.style.display = "flex"
+        registerContainer.style.display = "none"
+        contentWrapper.style.display = "none"  
+        signupNav.style.display = "flex"
+        logoutNav.style.display = "none"
+        resetScroll();
+
+        closeWS()
+    })
+})
+
+        9 x ÿÿ     20240322073705-8lç8 ‰sF6'   http://localhost:8000/frontend/index.js      z  
+
+const postsContainer = document.querySelector('.posts-container');
+const createPostContainer = document.querySelector(".create-post-container");
+const postContainer = document.querySelector(".post-container");
+const contentWrapper = document.querySelector('.content-wrapper');
+const registerContainer = document.querySelector('.register-container');
+const signinContainer = document.querySelector('.signin');
+const signupNav = document.querySelector('.signup-nav');
+const logoutNav = document.querySelector('.logout-nav');
+const onlineUsers = document.querySelector('.online-users');
+const offlineUsers = document.querySelector('.offline-users');
+const commentsContainer = document.querySelector('.comments-container');
+const topPanel = document.querySelector('.top-panel');
+const newPostNotif= document.querySelector('.new-post-notif-wrapper');
+const msgNotif = document.querySelector(".msg-notification");
+
+let counter = 0
+var unread = []
+
+var conn;
+var currId = 0
+var currUsername = ""
+var currPost = 0
+
+var allPosts = []
+var filteredPosts = []
+
+var allUsers = []
+var online = []
+
+var currComments = []
+
+//POST fetch function
+async function postData(url = '', data = {}) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    console.log('posted')
+
+    return response.json()
+}
+
+  
+
+//GET fetch function
+async function getData(url = '') {
+    console.log('getting', url)
+    const response = await fetch(url, {
+        method: 'GET'
+    })
+
+    return response.json()
+}
+
+
+async function getPosts() {
+    await getData('http://localhost:8000/post')
+    .then(value => {
+        allPosts = value
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+async function getUsers() {
+    await getData('http://localhost:8000/user')
+    .then(value => {
+        allUsers = value
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+  
+  
+
+async function getComments(post_id) {
+    await getData('http://localhost:8000/comment?param=post_id&data='+post_id)
+    .then(value => {
+        currComments = value
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+async function updateUsers() {
+    await getData('http://localhost:8000/chat?user_id=' + currId)
+        .then(value => {
+            var newUsers = []
+
+            if (value.user_ids != null) {
+                newUsers = value.user_ids.map((i) => {
+                    return allUsers.filter(u => u && u.id == i)[0]
+                })
+            }
+
+            let otherUsers = allUsers.filter(x => !newUsers.includes(x))
+
+            allUsers = newUsers.concat(otherUsers)
+
+            createUsers(allUsers, conn)
+        }).catch(err => {
+            console.log(err)
+        })
+}
+
+
+function startWS() {
+    if (window["WebSocket"]) {
+        conn = new WebSocket("ws://" + document.location.host + "/ws");
+
+        conn.onopen = function() {
+            console.log("WebSocket connection is open");
+            createUsers(allUsers, conn);
+        };
+
+        conn.onclose = function(evt) {
+            // Handle WebSocket connection close
+            console.log("WebSocket connection is closed");
+        };
+
+        conn.onmessage = function(evt) {
+            var data = JSON.parse(evt.data);
+            console.log(data);
+
+            if (data.msg_type === "msg") {
+                // Handle message logs
+                var senderContainer = document.createElement("div");
+                senderContainer.className = (data.sender_id == currId) ? "sender-container" : "receiver-container";
+                var sender = document.createElement("div");
+                sender.className = (data.sender_id == currId) ? "sender" : "receiver";
+                sender.innerText = data.content;
+                var date = document.createElement("div");
+                date.className = "chat-time";
+                date.innerText = data.date.slice(0, -3);
+                appendLog(senderContainer, sender, date);
+
+                    // Call CreateMessages to append the new message to the chatbox
+                    //CreateMessages(data, currId);
+
+                if (data.sender_id == currId) {
+                    return;
+                }
+
+                let unreadMsgs = unread.filter((u) => {
+                    id = data.sender_id;
+                    return u[0] == id;
+                });
+
+                if (document.querySelector('.chat-wrapper').style.display == "none") {
+                    if (unreadMsgs.length == 0) {
+                        unread.push([data.sender_id, 1]);
+                    } else {
+                        unreadMsgs[0][1] += 1;
+                    }
+                }
+
+                updateUsers();
+            } else if (data.msg_type === "online") {
+                // Handle online status updates
+                online = data.user_ids;
+                getUsers().then(function() {
+                    updateUsers();
+                });
+            } else if (data.msg_type === "post") {
+                // Handle post notifications
+                newPostNotif.style.display = "flex";
+        
+            } else if (data.msg_type === "") {
+                // Handle typing status updates
+                if (data.is_typing) {
+                    console.log("User " + data.sender_id + " started typing");
+                    document.querySelector("#typing-indicator").style.display = "block";
+                    document.querySelector("#typing-text").textContent = "is typing";
+                    var typingInterval = 2000; 
+                    animateDots(typingInterval);
+                } else {
+                    console.log("User " + data.sender_id + " stopped typing");
+                    document.querySelector("#typing-indicator").style.display = "none";
+                }
+            }
+        };
+    } else {
+        var item = document.createElement("div");
+        item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
+        appendLog(item);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async function() {
+    await getPosts();
+    await getUsers();
+
+    document.querySelector('.chat-wrapper').style.display = "none";
+
+    let sess;
+    try {
+        sess = await postData('http://localhost:8000/session');
+    } catch (error) {
+        // Handle the absence of session cookie here
+        // For example, you can redirect the user to the login page or display a message
+        console.log("Session cookie not found or expired");
+        return;
+    }
+
+    let vals = sess.msg.split("|");
+    currId = parseInt(vals[0]);
+    currUsername = vals[1];
+
+    signinContainer.style.display = "none";
+    signupNav.style.display = "none";
+    contentWrapper.style.display = "flex";
+    logoutNav.style.display = "flex";
+
+    document.querySelector('.profile').innerText = currUsername;
+    startWS();
+
+    createPosts(allPosts);
+    updateUsers();
+});
+
+
+function createPost(postdata) {
+
+    document.querySelector('#title').innerHTML = postdata.title
+    document.querySelector('#username').innerHTML = allUsers.filter(u => {return u.id == postdata.user_id})[0].username
+    document.querySelector('#date').innerHTML = (postdata.date).slice(0, -3)
+    document.querySelector('.category').innerHTML = postdata.category
+    document.querySelector('.full-content').innerHTML = postdata.content
+    document.getElementById('post-likes').innerHTML = postdata.likes
+    document.getElementById('post-dislikes').innerHTML = postdata.dislikes
+}
+
+function createComments(commentsdata) {
+    commentsContainer.innerHTML = ""
+    if (commentsdata == null) {
+        return
+    }
+
+    commentsdata.map(({id, post_id, user_id, content, date}) =>{
+        var commentWrapper = document.createElement("div");
+        commentWrapper.className = "comment-wrapper"
+        commentsContainer.appendChild(commentWrapper)
+        var userImg = document.createElement("img");
+        userImg.src = "./frontend/assets/profile7.svg"
+        commentWrapper.appendChild(userImg)
+        var comment = document.createElement("div");
+        comment.className = "comment"
+        commentWrapper.appendChild(comment)
+        var commentUserWrapper = document.createElement("div");
+        commentUserWrapper.className = "comment-user-wrapper"
+        comment.appendChild(commentUserWrapper)
+        var commentUsername = document.createElement("div");
+        commentUsername.className = "comment-username"
+        commentUsername.innerText = allUsers.filter(u => {return u.id == user_id})[0].username
+        commentUserWrapper.appendChild(commentUsername)
+        var commentDate = document.createElement("div");
+        commentDate.className = "comment-date"
+        commentDate.innerHTML = date.slice(0, -3)
+        commentUserWrapper.appendChild(commentDate)
+        var commentSpan = document.createElement("div");
+        commentSpan.innerHTML = content
+        comment.appendChild(commentSpan)
+    })
+}
+
+function createPosts(postdata) {
+    postsContainer.innerHTML = ""
+
+    if (postdata == null) {
+        return
+    }
+
+    postdata.map(async ({id, user_id, category, title, content, date, likes, dislikes}) => {
+        await getComments(id)
+
+        var post = document.createElement("div");
+        post.className = "post"
+        post.setAttribute("id", id)
+        postsContainer.appendChild(post)
+        var posttitle = document.createElement("div");
+        posttitle.className = "title"
+        posttitle.innerText = title
+        post.appendChild(posttitle)
+        var author = document.createElement("div");
+        author.className = "author"
+        post.append(author)
+        var img = document.createElement("img");
+        img.src = "./frontend/assets/profile7.svg"
+        author.appendChild(img)
+        var user = document.createElement("div");
+        user.className = "post-username"
+        user.innerHTML = allUsers.filter(u => {return u.id == user_id})[0].username
+        author.appendChild(user)
+        var postdate = document.createElement("div");
+        postdate.className = "date"
+        postdate.innerText = date.slice(0, -3)
+        author.appendChild(postdate)
+        var postcontent = document.createElement("div");
+        postcontent.className = "post-body"
+        postcontent.innerText = content
+        post.append(postcontent)  
+        var commentsWrapper = document.createElement("div");
+        commentsWrapper.className = "comments-wrapper"
+        post.appendChild(commentsWrapper)
+        var likesDislikesWrapper = document.createElement("div");
+        likesDislikesWrapper.className = "likes-dislikes-wrapper"
+        commentsWrapper.appendChild(likesDislikesWrapper)
+        var likesWrapper = document.createElement("div");
+        likesWrapper.className = "likes-wrapper"
+        likesDislikesWrapper.appendChild(likesWrapper)
+        var likesImg = document.createElement("img");
+        likesImg.src = "./frontend/assets/like3.svg"
+        likesWrapper.appendChild(likesImg)
+        var postlikes = document.createElement("div");
+        postlikes.className = "likes"
+        postlikes.innerText = likes
+        likesWrapper.appendChild(postlikes)
+        var dislikesWrapper = document.createElement("div");
+        dislikesWrapper.className = "likes-wrapper dislike"
+        likesDislikesWrapper.appendChild(dislikesWrapper)
+        var dislikesImg = document.createElement("img");
+        dislikesImg.src = "./frontend/assets/dislike4.svg"
+        dislikesWrapper.appendChild(dislikesImg)
+        var postdislikes = document.createElement("div");
+        postdislikes.className = "dislike"
+        postdislikes.innerText = dislikes
+        dislikesWrapper.appendChild(postdislikes)
+        var comments = document.createElement("div");
+        comments.className = "comments"
+        commentsWrapper.appendChild(comments)
+        var commentsImg = document.createElement("img");
+        commentsImg.src = "./frontend/assets/comment.svg"
+        comments.appendChild(commentsImg)
+        var comment = document.createElement("div");
+        comment.className = "comment"
+        comment.innerText = (currComments === null) ? "0 Comments" : currComments.length + " Comments"
+        comments.appendChild(comment)
+
+        post.addEventListener("click", async function(e) {
+            currPost = parseInt(post.getAttribute("id"))
+
+            await getComments(currPost)
+
+            createPost(allPosts.filter(p => {return p.id == currPost})[0])
+            createComments(currComments)
+            document.getElementById('post-comments').innerHTML = (currComments === null) ? "0 Comments" : currComments.length + " Comments"
+        
+            postsContainer.style.display = "none"
+            postContainer.style.display = "flex"
+            topPanel.style.display = "none"
+        })
+    })
+}
+var firstId = 512;
+
+function createUsers(userdata, conn) {
+    onlineUsers.innerHTML = ""
+    offlineUsers.innerHTML = ""
+
+    if (userdata == null) {
+        return
+    }
+
+    userdata.map(({id, username}) => {
+        if (id == currId) {
+            return
+        }
+
+        var user = document.createElement("div");
+        user.className = "user"
+        user.setAttribute("id", ('id'+id))
+
+        if (online.includes(id)) {
+            onlineUsers.appendChild(user)
+        } else {
+            offlineUsers.appendChild(user)
+        }
+
+        var userImg = document.createElement("img");
+        userImg.src = "./frontend/assets/profile4.svg"
+        user.appendChild(userImg)
+        var chatusername = document.createElement("p");
+        chatusername.innerText = username
+        user.appendChild(chatusername)
+        var msgNotification = document.createElement("div");
+        msgNotification.className = "msg-notification"
+        msgNotification.innerText = 1
+        user.appendChild(msgNotification)
+
+        let unreadMsgs = unread.filter((u) => {
+            return u[0] == id
+        })
+
+        if (unreadMsgs.length != 0 && unreadMsgs[0][1] != 0) {
+            const msgNotif =  document.getElementById('id'+id).querySelector('.msg-notification');
+            msgNotif.style.opacity = "1"
+            msgNotif.innerText = unreadMsgs[0][1]
+            
+            document.getElementById('id'+id).style.fontWeight = "900"
+        } 
+        
+
+        user.addEventListener("click", function(e) {
+            resetScroll();
+            console.log("user clicked on a profifle with the id of:", id);
+            if (typeof conn === "undefined") {
+                // Handle the case when the WebSocket connection is not yet established
+                console.log("WebSocket connection is not ready");
+                return;
+            }
+            
+            let resp = getData('http://localhost:8000/message?receiver=' + id+'&firstId='+ firstId);// Get the message logs from the database for the receiver ID
+            resp.then(value => {
+                let ridStr = user.getAttribute("id");
+                console.log("ridstr:", ridStr);
+                const regex = /id/i;
+                const rid = parseInt(ridStr.replace(regex, ''));
+                console.log("Opened chat with receiver ID:", rid);
+                if (value && value.length > 0) {
+                    const lastIndex = value.length - 1;
+                    firstId = value[lastIndex].id;
+                    lastFetchedId = firstId;
+                    console.log("createUser firstId", firstId);
+                  }
+                counter = 0;
+                document.getElementById('id'+id).querySelector(".msg-notification").style.opacity = "0";
+                OpenChat(rid, conn, value, currId, firstId);// Open chat window with the receiver ID and send the message logs
+
+                console.log("first fetch Message logs:", value);
+            }).catch();
+        });
+    })
+}
+
+
+var msg = document.getElementById("chat-input");
+var log = document.querySelector(".chat")
+
+function appendLog(container, msg, date) {
+    var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
+    log.appendChild(container);
+    container.append(msg);
+    msg.append(date)
+   
+    if (doScroll) {// Scroll to the bottom if scrolled near the bottom
+        log.scrollTop = log.scrollHeight - log.clientHeight;
+    }
+}
+
+document.getElementById("categories").onchange = function () {
+    let val = document.getElementById("categories").value
+
+    if (val == "all") {
+        createPosts(allPosts)
+        return
+    }
+
+    filteredPosts = allPosts.filter((i) => {
+        console.log(i.category)
+        return i.category == val
+    })
+    console.log(filteredPosts)
+    createPosts(filteredPosts)
+}
+
+document.getElementById("like-btn").addEventListener("click", () => {
+    let resp = postData('http://localhost:8000/like?post_id='+currPost+'&col=likes')
+    resp.then(value => {
+        let vals = value.msg.split("|")
+        document.getElementById('post-likes').innerHTML = parseInt(vals[0])
+        document.getElementById('post-dislikes').innerHTML = parseInt(vals[1])
+    }).catch()
+})
+
+document.getElementById("dislike-btn").addEventListener("click", () => {
+    let resp = postData('http://localhost:8000/like?post_id='+currPost+'&col=dislikes')
+    resp.then(value => {
+        let vals = value.msg.split("|")
+        document.getElementById('post-likes').innerHTML = parseInt(vals[0])
+        document.getElementById('post-dislikes').innerHTML = parseInt(vals[1])
+    }).catch()
+})
+
+//Sign in
+document.querySelector('.signin-btn').addEventListener("click", signIn);
+
+// Add keydown event listeners to the input fields
+document.querySelector('#email-username').addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        signIn();
+    }
+});
+document.querySelector('#signin-password').addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        signIn();
+    }
+});
+
+// Function to handle sign-in
+async function signIn() {
+    await getPosts();
+    await getUsers();
+
+    const emailUsername = document.querySelector('#email-username');
+    const signinPassword = document.querySelector('#signin-password');
+
+    const emailUsernameValue = emailUsername.value.trim();
+    const signinPasswordValue = signinPassword.value.trim();
+
+    // Check if any field is empty
+    if (emailUsernameValue === "" || signinPasswordValue === "") {
+        const errorMessageElement = document.querySelector('.error-message');
+        errorMessageElement.innerText = "Please fill in all fields.";
+        errorMessageElement.classList.add('show'); // Show the error message box
+
+        // Shake the empty field(s)
+        if (emailUsernameValue === "") {
+            shakeField(emailUsername);
+        }
+        if (signinPasswordValue === "") {
+            shakeField(signinPassword);
+        }
+
+        return;
+    }
+
+    let data = {
+        emailUsername: emailUsernameValue,
+        password: signinPasswordValue
+    };
+
+    const errorMessageElement = document.querySelector('.error-message');
+
+    postData('http://localhost:8000/login', data)
+        .then(resp => {
+            let vals = resp.msg.split("|");
+            currId = parseInt(vals[0]);
+            currUsername = vals[1];
+
+            document.querySelector('.profile').innerText = currUsername;
+
+            signinContainer.style.display = "none";
+            signupNav.style.display = "none";
+            contentWrapper.style.display = "flex";
+            logoutNav.style.display = "flex";
+
+            emailUsername.value = "";
+            signinPassword.value = "";
+
+            startWS();
+
+            createPosts(allPosts);
+            updateUsers();
+
+            // Clear the error message
+            errorMessageElement.innerText = "";
+            errorMessageElement.classList.remove('show'); // Hide the error message box
+        })
+        .catch(error => {
+            const errorMessage = "Username or password is incorrect.";
+            errorMessageElement.innerText = errorMessage;
+            errorMessageElement.classList.add('show'); // Show the error message box
+        });
+}
+
+// Function to shake a field
+function shakeField(field) {
+    field.classList.add('shake');
+    setTimeout(() => {
+        field.classList.remove('shake');
+    }, 500);
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Sign up/Sign in button + link
+    const signupLink = document.querySelector('#signup-link');
+    const signinLink = document.querySelector('#signin-link');
+    const signupBtn = document.querySelector('.signup-btn');
+    const successContainer = document.querySelector('.success-container');
+  
+    // Logic for displaying registerContainer and updating button text
+    signupLink.addEventListener('click', function() {
+      signinContainer.style.display = "none";
+      registerContainer.style.display = "block";
+      updateSignupButtonText("SIGN IN");
+    });
+  
+    // Logic for displaying signinContainer and updating button text
+    signinLink.addEventListener('click', function() {
+      signinContainer.style.display = "flex";
+      registerContainer.style.display = "none";
+      updateSignupButtonText("SIGN UP");
+    });
+  
+    // Logic for toggling between sign up and sign in
+    signupBtn.addEventListener("click", function() {
+      if (signupBtn.innerText === "SIGN UP") {
+        signinContainer.style.display = "none";
+        registerContainer.style.display = "block";
+        updateSignupButtonText("SIGN IN");
+      } else {
+        signinContainer.style.display = "flex";
+        registerContainer.style.display = "none";
+        updateSignupButtonText("SIGN UP");
+      }
+    });
+  
+    // Function to update the button text
+    function updateSignupButtonText(text) {
+      signupBtn.innerText = text;
+    }
+  
+    // Hide the success container when the "SIGN UP" button is clicked
+    signupBtn.addEventListener('click', function() {
+      successContainer.style.display = "none";
+    });
+  });
+
+// Register
+(function() {
+    const registerContainer = document.querySelector('.register-container');
+    const signinContainer = document.querySelector('.signin');
+
+    document.querySelector(".register-btn").addEventListener("click", function(e) {
+        e.preventDefault();
+
+        const fname = document.querySelector("#fname").value;
+        const lname = document.querySelector("#lname").value;
+        const email = document.querySelector("#email").value;
+        const username = document.querySelector("#register-username").value;
+        const age = document.querySelector("#age").value;
+        const gender = document.querySelector("#gender").value;
+        const password = document.querySelector("#register-password").value;
+
+        const errorMessageElement = document.querySelector('.error-message2');
+        errorMessageElement.innerText = ""; // Clear previous error message
+
+        let isValid = true;
+
+        if (fname === "") {
+            errorMessageElement.innerText = "Enter a firstname. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (lname === "") {
+            errorMessageElement.innerText += "Enter a surname. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (!isValidEmail(email)) {
+            errorMessageElement.innerText += "Enter a valid email address. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (username === "") {
+            errorMessageElement.innerText += "Enter a username. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (age === "") {
+            errorMessageElement.innerText += "Enter a DOB. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (gender === "") {
+            errorMessageElement.innerText += "Enter a gender. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (password === "") {
+            errorMessageElement.innerText += "Enter a password. ";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        // Check if password is at least 6 characters long
+        if (password.length < 6) {
+            errorMessageElement.innerText = "Password should be at least 6 characters long.";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            return;
+        }
+
+        // Check if email is valid using regex
+        if (!isValidEmail(email)) {
+            errorMessageElement.innerText = "Please enter a valid email address.";
+            errorMessageElement.classList.add('show'); // Show the error message box
+            return;
+        }
+
+        let data = {
+            id: 0,
+            username: username,
+            firstname: fname,
+            surname: lname,
+            gender: gender,
+            email: email,
+            dob: age,
+            password: password
+        }
+
+        postData('http://localhost:8000/register', data)
+            .then(value => {
+                // Check if the response has an error property
+                if (value.error) {
+                    let customErrorMessage = "The email or username you entered is already taken.";
+                    errorMessageElement.innerText = customErrorMessage;
+                    errorMessageElement.classList.add('show'); // Show the error message box
+                    return;
+                }
+
+                const msg = value.msg;
+
+                // Hide register container
+                registerContainer.style.display = "none";
+
+                // Show successful registration container
+                const successContainer = document.querySelector('.success-container');
+                successContainer.style.display = "block";
+
+                // Update success message
+                const successMessage = document.querySelector('.success-message');
+                successMessage.innerText = msg;
+
+                // Button to reveal sign-in container
+                const signInButton = document.querySelector('.sign-in-button');
+                signInButton.addEventListener('click', function() {
+                    successContainer.style.display = "none";
+                    signinContainer.style.display = "flex";
+                });
+            })
+            // Catch any errors and display the error message
+            .catch(error => {
+                errorMessageElement.innerText = "The email or username you entered is already taken.";
+                errorMessageElement.classList.add('show'); // Show the error message box
+            });
+    });
+
+    // Function to check if email is valid
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Function to send POST request
+    function postData(url, data) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json());
+    }
+})();
+
+
+
+
+//New post button
+document.querySelector(".new-post-btn").addEventListener("click", function() {
+    postsContainer.style.display = "none"
+    postContainer.style.display = "none"
+    createPostContainer.style.display = "flex"
+    topPanel.style.display = "none"
+    const title = document.querySelector("#create-post-title").value = ""
+    const body = document.querySelector("#create-post-body").value = ""
+
+})
+
+//Create new post
+document.querySelector(".create-post-btn").addEventListener("click", function() {
+    const title = document.querySelector("#create-post-title").value
+    const body = document.querySelector("#create-post-body").value
+    const category = document.querySelector("#create-post-categories").value
+    let data = {
+        id: 0,
+        user_id: 0,
+        category: category,
+        title: title,
+        content: body,
+        date: '',
+        likes: 0,
+        dislikes: 0
+    }
+    
+    var msg
+    let resp = postData('http://localhost:8000/post', data)
+    resp.then(async value => {
+        msg = value.msg
+
+        await getPosts()
+        createPosts(allPosts)
+
+        sendMsg(conn, 0, {value: "New Post"}, 'post')
+
+        createPostContainer.style.display = "none"
+        postsContainer.style.display = "flex"
+        topPanel.style.display = "flex"
+        
+    })
+})
+
+//Comments
+document.querySelector(".send-comment-btn").addEventListener("click", sendComment)
+document.querySelector("#comment-input").addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+        sendComment();
+    }
+})
+
+function sendComment() {
+    let comment = document.querySelector("#comment-input").value
+    commentsdata = {
+        id: 0,
+        post_id: currPost,
+        user_id: currId,
+        content: comment,
+        date: ""
+    }
+    console.log(commentsdata)
+    
+    let resp = postData('http://localhost:8000/comment', commentsdata)
+    resp.then(async () => {
+        document.querySelector("#comment-input").value = ""
+
+        await getComments(currPost)
+        document.getElementById('post-comments').innerHTML = (currComments === null) ? "0 Comments" : currComments.length + " Comments"
+        createComments(currComments)
+    })
+}
+
+
+//Go back to home page when click on logo + back button
+document.querySelector(".logo").addEventListener("click", home)
+document.querySelector(".back").addEventListener("click", home)
+document.querySelector("#back-btn").addEventListener("click", home)
+
+async function home() {
+    selectCategories = document.getElementById("categories");
+    selectCategories.selectedIndex = 0;
+
+    await getPosts()
+    createPosts(allPosts)
+
+    createPostContainer.style.display = "none"
+    postContainer.style.display = "none"
+    postsContainer.style.display = "flex"
+    topPanel.style.display = "flex"
+    newPostNotif.style.display = "none"
+}
+
+newPostNotif.addEventListener('click', async function() {
+    
+    await getPosts()
+    createPosts(allPosts)
+    newPostNotif.style.display = "none"
+    window.scrollTo(0, 0);
+});
+
+function closeWS() {
+    if (conn.readyState === WebSocket.OPEN) {
+        conn.close()
+    }
+}
+
+//Log out btn
+document.querySelector(".logout-btn").addEventListener("click", function() {
+    var msg
+    var chatWrapper = document.querySelector(".chat-wrapper");
+    if (chatWrapper) {
+    chatWrapper.style.display = "none";
+    } 
+    let resp = postData('http://localhost:8000/logout')
+    resp.then(value => {
+        msg = value.msg
+        console.log(msg)
+
+        signinContainer.style.display = "flex"
+        registerContainer.style.display = "none"
+        contentWrapper.style.display = "none"  
+        signupNav.style.display = "flex"
+        logoutNav.style.display = "none"
+        resetScroll();
+
+        closeWS()
+    })
+})
+
+Ó˜ÀÙr  r         ªV©Z      postsContainer     ¸O€      document   Ø1:ò      querySelector      	„í      .posts-container   öÑÔH      createPostContainer    ±Ó      .create-post-container     ÙHh      postContainer      \øö<      .post-container    Bª¿z      contentWrapper	     b]Ââ      .content-wrapper
+   ÃD      registerContainer      ¥«L–      .register-container    å>ÌÆ      signinContainer    S8      .signin    ¦¿/ß	      signupNav      „˜      .signup-nav    öá
+	      logoutNav      ÍâUQ      .logout-nav    İëH|      onlineUsers     (G´      .online-users      Ô“      offlineUsers   ñb      .offline-users     µ‡      commentsContainer      Å‘ç      .comments-container    å¨9e      topPanel   §²pÀ
+      .top-panel     '•5      newPostNotif   ÌÇ§¤      .new-post-notif-wrapper    
+Ú‰      msgNotif   Ğ’š      .msg-notification      JD¨      counter    [C-/      unread      shş      conn!   d®™­      currId"     p‰úi      currUsername#   –ïùÓ      currPost$   é˜‡      allPosts%   pT¹      filteredPosts&      êO
+a      allUsers'   zc¼      online(     jäß      currComments)   	¾|      postData*   6—(      data+   ‰Oç      response,   ø$­,      fetch-      ½pwm      method.     ß:ğ      POST/   ¬y˜Ÿ      headers0    Şàl      Content-Type1   2Sb3      application/json2   ˜h;      body3   n§ë	      stringify4      şQ1      console5    =Xû      log6    3ÇA      posted7     .Â      json8   ÒÏŸ      getData9    ÖOà­      getting:    Å™ü
+      GET;    –+      getPosts<   ´ÊÇ{      http://localhost:8000/post=     ¼ğo˜      err>    Ä^ğ$      getUsers?   Š!¦ú      http://localhost:8000/user@     Â­(      getCommentsA    ¡‡Ã      post_idB    ‰¬1      http://localhost:8000/comment?param=post_id&data=C      O,,      updateUsersD    Ÿ8¨#      http://localhost:8000/chat?user_id=E    {‘Íã      newUsersF   ƒytì      user_idsG   9Ì      mapH    >	Å      filterI     ¤¢IU
+      otherUsersJ     ¦¢‚      concatK     ŒÜ#ÿ      createUsersL    ½™š      startWSM    ø2‡‰      windowN     ˆ†gŞ	      WebSocketO      ‚ÃÊÅ      ws://P      0+QA      locationQ   	Ş(r      hostR   ¢NG      /wsS    îŸ±      onopenT     A¹™5      WebSocket connection is openU   jÆı¥      oncloseV    óg      evtW    ÁîÉô      WebSocket connection is closedX     ó›)	      onmessageY      5õ‡Æ      parseZ      S:      msg_type[   ÿ?X‹      msg\    ú¬šŒ      senderContainer]    DC      createElement^      œ³æÙ      div_    6CY>	      className`      Ò,‰+	      sender_ida      ´©Y      sender-containerb   åuóÌ      receiver-containerc     ¡"üÏ      senderd     Ş&U      receivere   ­	v	      innerTextf      4WÈ      contentg    „÷è¡	      chat-timeh      Ø… Ì      slicei      «ÉM	      appendLogj      ZXĞ÷
+      unreadMsgsk     uŸS      .chat-wrapperl      e}Ÿ      displaym    ,½      nonen   ğ„u2      pusho   ßb+      postp    Õqî      flexq   Ñ­ˆ°	      is_typingr      Q]¸q      User s      RCel       started typingt    «˜š      #typing-indicatoru      Ÿàû      blockv       t@&      #typing-textw   bÈÅe      textContentx    øhï°	      is typingy      N’@      typingIntervalz     G¬\á      animateDots{    ¸àşİ       stopped typing|    ı„Ìº      item}   QÃ:	      innerHTML~      lı¢N0      <b>Your browser does not support WebSockets.</b>    rO      addEventListener€   KjH      DOMContentLoaded   z­      sess‚   6bß#      http://localhost:8000/sessionƒ      ştuW      error„      äãİ=#      Session cookie not found or expired…     "Ë@      vals†   m7Ë3      .profile‡   Æ£Ñ      createPostsˆ    d˜'.
+      createPost‰     ?<Z§      postdataŠ   Ènô      #title‹     ÒE      titleŒ      †K	      #username      Û©C      user_id    /©Â%      username   )á¾      #date      |Æ	      .category‘      À¹¼      category’   ìÉ#Q      .full-content“      tÇ£      getElementById”     B0K
+      post-likes•     (¡ß<      likes–      6²•      post-dislikes—      ¦Eéë      dislikes˜   e›#       createComments™     ·PUş      commentsdataš   O(½¿      commentWrapper›     ÍW      comment-wrapperœ    ­$~      appendChild    :T›K      userImg    e œ      imgŸ    œ·È›      src     }’-/      ./frontend/assets/profile7.svg¡     µ©8      comment¢    àø#      commentUserWrapper£     d[]±      comment-user-wrapper¤   öĞÌ      commentUsername¥    w˜Ã      comment-username¦   3söu      commentDate§    [ßKÒ      comment-date¨   ¿bèG      commentSpan©    —{ÚD      setAttributeª   hæ>	      posttitle«      °µÚ      author¬     ÜB-      append­     é†Ä»      user®   ZÄ±Í      post-username¯      [U|.      postdate°   Ãv¬      postcontent±    •ûrC	      post-body²      ÛÅÚ      commentsWrapper³    bp8      comments-wrapper´   «lÔ—      likesDislikesWrapperµ   X vA      likes-dislikes-wrapper¶     —ùg      likesWrapper·   ßYjz      likes-wrapper¸      PÕ —      likesImg¹   S#ú_      ./frontend/assets/like3.svgº    w¥gv	      postlikes»      zş©„      dislikesWrapper¼    ïu3Z      likes-wrapper dislike½      ô(½      dislikesImg¾    ^Le      ./frontend/assets/dislike4.svg¿     ş\_°      postdislikesÀ   m!¢)      dislikeÁ    4sß      commentsÂ   	4Ş      commentsImgÃ    Ñ}Æ      ./frontend/assets/comment.svgÄ      ü#Ïû
+      0 CommentsÅ     ×{†n	       CommentsÆ      ŸªâX      clickÇ      4>ôE      getAttributeÈ   'Qk      post-commentsÉ      Z/|      firstIdÊ    nÃP      userdataË   œ˜©m      ./frontend/assets/profile4.svgÌ     â      chatusernameÍ   î$Ñ      msgNotificationÎ    ÇÊÚ³      msg-notificationÏ   ßueÉ      opacityĞ    `×·×
+      fontWeightÑ     né§H      900Ò    P¢=      resetScrollÓ    Šîq*      user clicked on a profifle with the id of:Ô     /—¤ï!      WebSocket connection is not readyÕ      æT»      respÖ   ­„¿2'      http://localhost:8000/message?receiver=×    J£ Â	      &firstId=Ø      ßÚ…×      ridStrÙ     D˜‰]      ridstr:Ú    ²cT      regexÛ      ­UR½      ridÜ    ığ      Opened chat with receiver ID:İ      €şÕv      lastFetchedIdŞ      èÁ’      createUser firstIdß     ;ÕÑN      OpenChatà   yã|      first fetch Message logs:á      Şû™
+      chat-inputâ     ßÿ/¤      .chatã      -â
+è	      containerä      €„–b      doScrollå   “Gë	      scrollTopæ      LsA¿      scrollHeightç   Ëú¸      clientHeightè   &‘İ…
+      categoriesé     3      onchangeê   &Ú›      valë    £Õ/å      allì    OÏ/(      like-btní   ¿ª#      http://localhost:8000/like?post_id=î    he¦T
+      &col=likesï     dI‰Õ      dislike-btnğ    Uı      &col=dislikesñ      ğv¾~      .signin-btnò    \»      signInó     çú-      #email-usernameô    ºÓ      keydownõ    II·P      eventö      Bü¿;      key÷    ì~o^      Enterø      à-:
+      #signin-passwordù   7MèS      emailUsernameú      s}Ì      signinPasswordû     ÓÎ      emailUsernameValueü     —–™b      trimı   J˜„      signinPasswordValueş    Ò=*a      errorMessageElementÿ    @ß      .error-message     û;      Please fill in all fields.     Ù¶z	      classList     H‡’K      show  ÜÏ
+      shakeField    ø©˜ß      password  Çe r      http://localhost:8000/login   *N·Æ      remove    5Œ•S      errorMessage  öİı"      Username or password is incorrect.	     Ò–!      field
+     ›?ó¦      shake     3AtÙ
+      setTimeout    gc¥—
+      signupLink    Ä‰F~      #signup-link  ›æl
+      signinLink     7é      #signin-link  l®€-	      signupBtn     ÕŒ|      .signup-btn   1¦¡      successContainer  ÷¿ßî      .success-container    ü7­_      updateSignupButtonText    IvÑò      SIGN IN   dı}      SIGN UP   ˆ3Àµ      text  vó4      .register-btn     B9ºÀ      preventDefault    D>ƒİ      fname     §u      #fname    œ²4      lname     ³e©ó      #lname    <Ûñ      email     E,’ÿ      #email     U¯X      #register-username!    O|S	      age"   Èó÷      #age#  €M0ğ      gender$    <íµé      #gender%   ºQÁ      #register-password&    ".	g      .error-message2'   §ß£Á      isValid(   Ï²u      Enter a firstname. )   'ˆ      Enter a surname. *     {Ë¤/      isValidEmail+  “}ş5      Enter a valid email address. ,     œSAç      Enter a username. -    ¹æÃ]      Enter a DOB. .     Ê›’      Enter a gender. /  ‡˜Ÿ–      Enter a password. 0    ugÓ¿.      Password should be at least 6 characters long.1    ØŞ}:#      Please enter a valid email address.2   Q”â«	      firstname3     `Ó§Ë      surname4   Ë¸ŒÑ      dob5   cÊ¢      http://localhost:8000/register6    ¶/²É      customErrorMessage7    †Pí3      The email or username you entered is already taken.8   A‡#      successMessage9    ~'·”      .success-message:  .æ‘      signInButton;  ,ø      .sign-in-button<   ƒûŒ¼
+      emailRegex=     w›À      ^[^\s@]+@[^\s@]+\.[^\s@]+$>    ğ¶â„      .new-post-btn?     k½j      #create-post-title@    ¦G¢1      #create-post-bodyA     ½Ø;[      .create-post-btnB  _‰¼ì      #create-post-categoriesC   ƒYZ      sendMsgD   îZ”      New PostE  RÏ\      .send-comment-btnF     ª)X°      sendCommentG   1õ      #comment-inputH    ­5      keyCodeI   –8      http://localhost:8000/commentJ     g‚A      .logoK     VÇ8—      homeL  4}      .backM     !Ğtû	      #back-btnN     æô‡1      selectCategoriesO  ›¼3      selectedIndexP     Vœ×Ø      scrollToQ  JÅ¨Â      closeWSR   ¹UŸ•
+      readyStateS    ı7…c      OPENT  `®3h      .logout-btnU   FÎ2      chatWrapperV   ÀŒËÿ      http://localhost:8000/logoutW  6ç
+      getPosts/<X    @0~
+      getUsers/<Y    f
+¡Ù      getComments/<Z     ¸õ§      updateUsers/<[     ÿ+ß      updateUsers/</newUsers<\   Wâ+
+      updateUsers/</newUsers</<]     nI|D      updateUsers/</otherUsers<^     Î¬j      startWS/conn.onopen_   Œ*¿º      startWS/conn.onclose`  @¥è¯      startWS/conn.onmessagea    ‚ƒ¸'"      startWS/conn.onmessage/unreadMsgs<b    ~¢l6      startWS/conn.onmessage/<c  @ìI      createComments/<d  Å}©+      createComments/</commentUsername.innerText<e   .™—4      createPosts/<f     =÷è¨      createPosts/</user.innerHTML<g     ®¯a      createPosts/</<h   3â]p      createPosts/</</<i     "‡Ü      createUsers/<j     {r±      createUsers/</unreadMsgs<k     Í9¤‡      createUsers/</<l   0>ğ      createUsers/</</<m     Ÿ°      filteredPosts<n    MÂVL      signIn/<o  ü¸¯
+      shakeField/<p  ÷ˆæ›
+      postData/<q    ×ßÅ      sendComment/<     O   ú  m   O             ï%,‰                                                                                                                                                                                                         	                 
+                                                                                                                                                                                                                                                                                                                                                                         !                "                  "          !      $           "                 #      &          $      '                (           %      (                (           &      +                 ,           '      -                 .                            (                 1      1                2                2           2      4                 2           3      6                            4      8           5                  H      :                 ;          I                 J                  L                       ?                 @                            )      B                C           *                  +      E                 F           ,      G                             -      I                 J           .      K                             /                  0                 6      O                P           :      P           7      P           8      P           9      P           ;                 <      V                W           A      X                 W           B      Z           C      W           =      \                ]           >      ^                _                _           ?      ]           @                  D      c                            E      e                 f          F                  G                 K                 M      j                k           N      ³OŒc-         ;  &  Q  @  ò  8  #  (  5     F [  %  i  L  ˆ  '  ˜  K   K  É  $  C  >  )  "  !  ‡                         
+                    $ `*  P}  `          +              $ `}  `          +                 }  `             *               =                 }  `             *               =               A  P}  `             *               =                 }  `             *  E  P         I               i `             u               x               =                |                               V              V  *  P\  c  V   y           j               u                               ‰  P             u               ™                   A    Pf  V   š    ¡  ¢  ¤  ¦  ¨               u               ‰             	     f   ‘  V   ‹  •    P—  ¶  ¡  »  o  P  «  ¸  °  ½  }  `Â  º  ²  ¿  ­  ª  ¯  ´  Á               u               e `}  `             p               Ê     P                `  ­  P  Ì  Í           j               u                           e           Õ               *           Ø  Ú  Û            1              ã  [  V   ä                 }  `         *  ù  Pú  Pû  ı  ş  P          ş               Õ           …               ƒ                          	 P                                         ¡  Õ                 }  `               }  `                               }  `           …           ƒ                            ê  P             i                           Õ               *           …                           Õ               *           …               õ               õ                  P             P P                                                                                             * P)  P           
+  P  P                        <              $  *               +               e  
+   	      ' *       ! #  ş  P             *            [   P8 :          6                              ƒ                            ‹  2                 [  P         *  Õ  ‹  2  ‘               * `}  `             õ                 }  `              [  PU          Õ               *  ¯Â0°    =     Iô$KE®úš                -  /  2        0          -     
+     ù           A    f  V           -  /  2        0     (        2 3 #  4     (         ‘  ‹  f  V   •  —           *  ‡&Õª!«!O   Ä     pİNZÄ  Ù                ±        Ø   ¹   ßI   â   r ±   İ¹   ßI   â   r ±   İ¹   ßI   â   r ±   İ¹   ßI   â   r ±   İ¹   ßI   â   r ±   İ¹   ßI   â   r ±   İ¹   ßI   â!   r ±    İ¹   ßI   â#   r ±"   İ¹   ßI   â%   r ±$   İ¹   ßI   â'   r ±&   İ¹   ßI   â)   r ±(   İ¹   ßI   â+   r ±*   İ¹   ßI   â-   r ±,   İ¹   ßI   â/   r ±.   İ±0   İ¶1   g    È1   İ¶2   È2   İ¶3   4   È3   İ¶5   È5   İ¶6   g    È6   İ¶7   g    È7   İ¶8   g    È8   İ¶9   g    È9   İ¶:   g    È:   İ¹;   ßI<   â=   l>   v İ¶?    È?   İ¶@   ¹   ßIA   âB   r È@   İ¶C   ¹   ßI   âD   r ÈC   İ¹   ßIA   âE   r lF   KG   İ¹   ßIA   âH   r ßI<   âI   lJ   v İ¹   ßIA   âK   r ßI<   âI   lL   v İ¹   ßI   âM   r ßI<   âI   ¹N   v İ¹   ßI   âO   r ßI<   âP   lQ   v İ¹   ßI   âR   r ßI<   âP   lS   v İ¹   ßI<   â=   lT   v İlU    v  İ¹   ßI   âV   r ßI<   âI   lW   v İ¹   ßI   âX   r ßI<   âI   lY   v İ¹   ßI   âZ   r ßI<   âI   ¹[   v İ¹   ßI   â\   r ßI<   âP   l]   v İ¹   ßI   â^   r ßI<   âI   ¹_   v İ¹   ßI   â`   r ßI<   âI   ¹_   v İ¹   ßI   âa   r ßI<   âI   ¹_   v İ¹,   ßI<   âI   lb   v İ¹   ßI   âc   r ßI<   âI   ld   v İ¤E`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	P)`‘ 	PI`'e; e'e+eGe+eKe+eKe;€  Â`‘ 2ÿÿÿÕPD€ geI€ ¹e‘ 	P)e‘ 	P9€ Ç`‘ 	P>€ ×`‘ 	P5ÿÿÿæP4€ à`‘ 	P8ÿÿÿæP4€ ê`‘ 	P7ÿÿÿæP`‘ 	P=ÿÿÿäP4€ ò`‘ 	P>ÿÿÿäP4€ F`‘ .ÿÿÿÛPD€ t`F€ P4€ `‘ 	P9ÿÿÿæP4€ `‘ 	P<ÿÿÿæP4€ 7`‘ 	P=ÿÿÿæP`‘ 	P<ÿÿÿäP4€ U`‘ 	P1ÿÿÿæP`‘ 	P1ÿÿÿæP`‘ 	P5ÿÿÿæP4€ g`‘ -ÿÿÿàP4€ v`‘ 	P7ÿÿÿæP4€ ŒP€€€ü  WMÇq¸  Y                      9¯²   ²   İ‡Ì   İªº  ß ™   –   İ   –   ²   İº ß ™   –   İ8   –   ²   İ˜   –   ­¿   £¿   Š–   ª¯°   İ¹    ¿   8      ;   8   	   ;
+   ;   ¹   ßI   â¿   r ;   r ‘’š   –   ¿   ¿      ‰   ”–   °   İ¹   ßI   â   v İ¼   ßI   âr  £¯°   İĞ˜   ¯°   İĞ £–   ¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤ô &`%	*	%O	ÿÿÿöPHP®@`‘ PD
+`PÆPü  Ü  ¼  ß      t   ²   ÿÿÿÿ                        G           t   Ì   ¤  X\ß¶`                        9¯²   İ‡Ì   İªº  ß ™   –   İ   –   ²   İ˜   –   ­¿   £¿   Š–   ª¯°   İ¹   ßI   â   ¿   v İ¹    ¿   8      ;	   r ‘’š   –
+   ¿   ¿      ‰
+   ”–
+   °   İ¼   ßI
+   âr  £¯°   İĞ˜   ¯°   İĞ £–   ¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤Î &`‘ ÿÿÿñP$`%	JP®@`PÆP€¤  „  d  ¦      N   Š   ÿÿÿÿ    Ì                     &           N   ¤   ä   BbRÑĞ   ‰                        %‡Ì   İª¹       r ßI   âl   r ßI   âl   r ‘’š   –   ¿   ¿      ‰   ”–   İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤(`P*ÿÿÿûPJÿÿÿúPª0­P€€ä   Ô   O              h   8   ØU8                            ¶   º  È   İ¤ 	`.P€€D   OsÊD                            ¹   ßI   âº  v İ¤ 	`ÿÿÿüP$P€ä   BbRÑĞ   ‰                        %‡Ì   İª¹       r ßI   âl   r ßI   âl   r ‘’š   –   ¿   ¿      ‰   ”–   İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤(`P*ÿÿÿûPJÿÿÿúPª0­P€€ä   Ô   O              h   8   ØU8                            ¶   º  È   İ¤ 	`.P€€D   OsÊD                            ¹   ßI   âº  v İ¤ 	`ÿÿÿüP$P€ü   ïO¹¨è   ˜                       %»  Ì   İ‡Ì   İª¹       ¿   %r ßI   âl   r ßI   âl   r ‘’š   –   ¿   ¿      ‰   ”–   İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤‘ `4ÿÿÿÄP*ÿÿÿûPJÿÿÿúPª0­P€€€ü   ì   ^              n   8   ØU8                            ¶   º  È   İ¤ 	`.P€€D   OsÊD                            ¹   ßI   âº  v İ¤ 	`ÿÿÿüP$P€ğ   |äP°Ü                    	       %‡Ì   İª¹       ¹   %r ßI   âl   r ßI   âl   r ‘’š   –	   ¿   ¿      ‰	   ”–	   İ £¢¿   £¿   Š˜   –	   ­¿   £¿   Š–	   ¤(`(ÿÿÿĞP*ÿÿÿûPJÿÿÿúPª0­P€ğ   à   U              n     å{*Æø   ”                       ¯°   İg    Ì   İº  I   ™'   –   º  I   ßI   âl   r Ì   İ–   ¹   ßI   âl   r °   İ¶   ¿   ßI   â¼   r È   İ¹	    ¹   ¹
+   v İĞ¤ 	&`K`” `ÿÿÿüPN	`ÿÿÿùPH`‘ ÿÿÿùPI`
+ÿÿÿõP%	P         “   ÿÿÿÿP   «gNìP   !   	                     »  Ì   İ¹   ßI   âl   r J¡¤)`ÿÿÿùP%QL   ¶R¡ÔL   "                         º  ›   –   İº  I   ¿   –   ¡ `– €€€D   JôD                            ¿   ßI   âº  r ¡ `ÿÿÿ÷P
+€€D   >v	ÑD                            ¹   ßI   âº  v İ¤ `ÿÿÿüP$	P€  ZFM'  ½                         ¹   I   ™r   –   ¶   ¹      ¹   I   I   %   %á  € È   İ¹   l	   K
+   İ¹   l   K   İ¹   l   K   İ˜@   –   ¹   ßI   â   r Ë   İ¼      K   İ¹    ¼   v İ–   ¤ 	`” 	`
+š ÿÿÿèPI	`@		`@	`š0K `‘ 	P(	`/	`
+ÿÿÿÿP9PP€€€d   ªò ãd   *                          ¹   ßI   â   v İ¹    ¹   ¹   v İ¤ `‘ P$`
+ÿÿÿõP$	P€€D   DŞª{D                            ¹   ßI   â   v İ¤@`‘ P$	P€€0  ê—  ß         
+       t      ¹   ßI   âº  I   r Ì   İ¹   ßI   â¿   v İ¿   I      ™  –
+   ¯°  İ¹	   ßI
+   â   r Ë   İ¼   ¿   I   ¹   ™   –      ˜   –      –   K   İ¹	   ßI
+   â   r Ë  İ¼  ¿   I   ¹   ™   –      ˜   –      –   K   İ¼  ¿   I   K   İ¹	   ßI
+   â   r Ë  İ¼     K   İ¼  ¿   I   ßI   âır K   İ¹    ¼   ¼  ¼  v İ¿   I   ¹   ™   –*    £Ğ¤–*   ¹   ßI   âl   r °  İ¹	   ßI   â   r I   I       ™b   –4   ¼  I!   ™9   –7   ¹   ßI"   âg   ¿   I   h    h   v İ˜   –<   ¼  J.àJ%-Mİ–A   ¹#    v  İĞ˜–  –C   ¿   I   $   ™=   –F   ¶$   ¿   I%   È$   İ¹&    r  ßI'   âl(   v İ˜D  –M   ¿   I   )   ™$   –P   ¹*   I   +   K   İ˜  –S   ¿   I   ,   ™ñ   –V   ¿   I-   ™   –X   ¹   ßI   â.   ¿   I   %/   %v İ¹	   ßI   â0   r I   1   K   İ¹	   ßI   â2   r 3   K4   İĞË  İ¹5    ¼  v İ˜T   –i   ¹   ßI   â.   ¿   I   %6   %v İ¹	   ßI   â0   r I       K   İ–t   ¤ `ÿÿÿúP)`ÿÿÿüPD`š F'`‘ 	P(`/¯ `‘ 	P(`&¯ `” `‘ 	P(`/`˜ P)`
+ÿÿÿæPD`
+ `A<	H"`ÿÿÿùPH`‘ 	P `• `• ÿÿÿúP `”@$`• `š@'`• ` ÿÿÿûPN+`š@-`Ÿ@/`š@1`” `
+‘ ÿÿÿòP$`‘ 	P“ `‘ 	P.*`(`ÿÿÿÿP `
+‘ ÿÿÿòP$`‘ 	P˜@<	P€€€0     L   ÷  ÿÿÿÿ             P   KrŸP   "                         ¶   ¿   I   È   İº  J¹   ¡¤ `• `&Q€4   ƒw?ä4                             ¹    v  İ¤ `*P€€X  ¨Hì  D               4       9‡Ì   İª¯°   °  İ¹    r  ‘’š   –   ¿   ¿      ‰   ”–   İ¹    r  ‘’š   –   ¿   ¿     ‰   ”–   İ¹   ßI   â   r I      K	   İ °   İª¹
+       r ‘’š   –   ¿   ¿     ‰   ”–   Ë   İ˜M   –    £¬¯°  İ°  İ¹   ßI   â   v İ £¯°  İĞ¯°   °  İĞ˜ü   ¯°  İĞ–   ¼   I   ßI   â   r °  İ¶   ¹    ¼  Jr È   İ¶   ¼  JÈ   İ¹   I      K	   İ¹   I      K	   İ¹   I      K	   İ¹   I      K	   İ¹   ßI   â   r ¹   K   İ¹    v  İ¹    ¹   v İ¹     v  İ¯°   °  İĞ £–4   ¢¿   £¿   Š˜   –4   ­¿   £¿   Š–4   ¤*`Pª `Pª@`‘ 	P“0!	`P» K	`‘ P$	`1¤@`• 	P(`ÿÿÿ÷P)`‘@`• `• `• `•@`‘ 	P.`J`ÿÿÿÿP$`•²P€€X  8  ø  6   f   Æ         	  ÿÿÿÿ   ã   @                                         >              #  Œ  -æÍŒ  $  	              )       »  Ì   İ¹   ßI   â   r ¿   I   K   İ¹   ßI   â   r ¹   ßI   âl	   r JI
+   K   İ¹   ßI   â   r ¿   I   ßI   âır K   İ¹   ßI   â   r ¿   I   K   İ¹   ßI   â   r ¿   I   K   İ¹   ßI   â   r ¿   I   K   İ¹   ßI   â   r ¿   I   K   İ¤I`‘ 	P“ `‘ 	P7ÿÿÿùP `‘ 	P— 3P)`‘ 	P“ `‘ 	P“ `‘ 	P“ `‘ 	P“P€@   ‚‹e@                            º  I   ¿   I   ¡¤ `Q€€x   ‚Ósx   :                         ¹      K   İº  ™   –    ¡–   º  ßI   âl   v İ¤ ` 	`/	`1F`
+ÿÿÿüP4P€€è  ú´†è                  9       º  dßI   Ë   İßI   Ë  İßI   Ì   İßI   Ë  İßI   Ë  İİ¹   ßI   â   r Ë  İ¼  	   K
+   İ¹   ßI   â¼  v İ¹   ßI   â   r Ë  İ¼     K   İ¼  ßI   â¼  v İ¹   ßI   â   r Ë  İ¼     K
+   İ¼  ßI   â¼  v İ¹   ßI   â   r Ë  İ¼     K
+   İ¼  ßI   â¼  v İ¹   ßI   â   r Ë  İ¼     K
+   İ¼  ¹   ßI   âl   r JI   K   İ¼  ßI   â¼  v İ¹   ßI   â   r Ë	  İ¼	     K
+   İ¼	  ¼  ßI   âır K   İ¼  ßI   â¼	  v İ¹   ßI   â   r Ë
+  İ¼
+  ¼  K   İ¼  ßI   â¼
+  v İ¤½ `‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿôP$"`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	` ,ÿÿÿùP 	`ÿÿÿôP$`‘ 	P(	`/	`’ P)	`ÿÿÿôP$`‘ 	P(	`.	`ÿÿÿôP$P€<   Ø5†<<                            º  I   ¿   ¡¤ `Q€€€x   ªÓº„x   :                         ¹      K   İº  ™   –    ¡–   º  ßI   âl   v İ¤ `@	`/	`1WF`
+ÿÿÿüP4WP€  !ÏĞ ô  ş                     %‡Ì   İªº  dßI   Ë  İßI   Ì   İßI   Ë  İßI   Ë  İßI   Ë   İßI   Ë  İßI   Ë  İßI   Ë  İİ˜   –   ­¿   £¿   Š–   ª¹	    ¼  r ‘’š   –   ¿   ¿      ‰   ”–   İ¹
+   ßI   â   r Ì   İ¿      K   İ¿   ßI   â   ¼  v İ¹   ßI   â¿   v İ¹
+   ßI   â   r Ë  İ¼     K   İ¼  ¼  K   İ¿   ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼     K   İ¿   ßI   â¼  v İ¹
+   ßI   â   r Ë
+  İ¼
+     K   İ¼  ßI   â¼
+  v İ¹
+   ßI   â   r Ë  İ¼     K   İ¼  ¹   ßI   âl   r JI   K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼     K   İ¼  ¼  ßI   âır K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼     K   İ¼  ¼   K   İ¿   ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼      K   İ¿   ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  !   K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  "   K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  #   K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼     K   İ¼  ¼  K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë	  İ¼	  $   K   İ¼  ßI   â¼	  v İ¹
+   ßI   â   r Ë  İ¼  %   K   İ¼	  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  &   K   İ¼  ¼  K   İ¼	  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  '   K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  (   K   İ¼  ßI   â¼  v İ¹
+   ßI   â   r Ë  İ¼  )   K   İ¼  ¹*   ™   –ˆ   +   ˜   –ˆ   ¹*   I,   -   %–‹   K   İ¼  ßI   â¼  v İ¿   ßI.   â/   l0   v İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤ÿ%	`ÿÿÿôPª@`‘ 	P)	` 	`‘ ÿÿÿíP$	`ÿÿÿôP$`‘ 	P(	`/	`.	`ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿùP$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	` !ÿÿÿùP 	`ÿÿÿôP$`‘ 	P(	`/	`’ P)	`ÿÿÿôP$`‘ 	P(	`/	`.	`ÿÿÿùP$`‘ 	P(	`/	`ÿÿÿôP$$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`!ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`.	`ÿÿÿôP$`‘ 	P(	`/	`!ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`.	`ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`/	`¿ 	`ÿÿÿôPDB	`‘ %ÿÿÿàPDO­P€€  ø  ¬              c           „   a  <   Ø5†<<                            º  I   ¿   ¡¤ `Q€€€ì  a‡¦Ø  Y                &      %»  Ì   İ‡Ì   İª¶   ¹    ¿  ßI   â   r r È   İ¹    ¹   r ‘’š   –
+   ¿   ¿      ‰
+   ”–
+   İ¹    ¹   ßI   âl	   r Jv İ¹
+    ¹   v İ¹   ßI   â   r ¹   ™   –      ˜   –   ¹   I      %–   K   İ¹   I      K   İ¹   I      K   İ¹   I      K   İ £¢¿   £¿   Š˜   –&   ­¿   £¿   Š–&   ¤‘ `‘ PÿÿÿòPI`ÿÿÿôPª@`ÿÿÿùPÿÿÿöP$`ÿÿÿÿP$`‘ 	P¾@	`• `• `• 	­P€ì  Ü  b              /  <   ±¥x<                            º  I   ¹   ¡¤ `Q€€€”   ¶Âšr”   S   	                     » Ì   İ¹      K   İ¹      K   İº  ™   –    ¡–   º  ßI   âl   v İ¤)` `@	`/	`1MF`
+ÿÿÿüP4MP¼  X8gŒ                  F      º  dßI   Ì   İßI   Ë   İİ¯°  İ¿   ¹   ™   –    £Ğ¤–   ¹   ßI   â   r Ì   İ¿      K	   İ¿   ßI
+   â      ¿   %v İ¹   ßI   â¿   r ™$   –   ¹   ßI   â¿   v İ˜   –   ¹   ßI   â¿   v İ–   ¹   ßI   â   r Ë  İ¼     K   İ¿   ßI   â¼  v İ¹   ßI   â   r Ë  İ¼  ¼   K   İ¿   ßI   â¼  v İ¹   ßI   â   r Ë  İ¼     K	   İ¼  K   İ¿   ßI   â¼  v İ¹   ßI   âl   r °  İ¼  I   ›   –/   İ¼  JJ–2   ™   –3   ¯°  İ¹   ßI   â   ¿   %r ßI   â   r °  İ¼  I      K    İ¼  ¼  JJK   İ¹   ßI   â   ¿   %r I   !   K"   İĞ–D   ¿   ßI#   â$   l%   v İĞ¤œ &` `ADH`‘ 	P)	` 	`‘ ÿÿÿçPD	`ÿÿÿ÷P-`ÿÿÿôP `ÿÿÿôPI`‘ 	P(	`/	`ÿÿÿôP$`‘ 	P(	`.	`ÿÿÿôP$`‘ 	P(	`/	`+	`ÿÿÿôPD`ÿÿÿùPH`¯ 1&`ÿÿÿìPP(`” `’@#`ÿÿÿìP™@'	`‘ ÿÿÿæPEDP¼        p  ÿÿÿÿ    :             ç  …       8   ‘}ÿ8                            º  J¿   ¡¤ `&	Q€€0  Ø¶M  £                       ¯°   İ¹    v  İ¹   ßI   â   ¿   v İ¿     ™#   –   ¹   ßI   â   v İ £Ğ¤–   ¹    	   ¿   %
+   %¹   %r °   İ¼   ßI   âl   r ßI   âv  İĞ¤ &`*`‘ :ÿÿÿÎP$`–@`‘ P$`A	H	`,ÿÿÿÃP(`
+ÿÿÿûPJP%	P€€€0         ¢   ÿÿÿÿ    X          \  ˜LÀ-<  ‹                .      ¯°   °  °  İ¿   ßI   â   r °   İ¹   ßI   â   ¼   v İk   °  İ¹    ¼   ßI	   â¼  
+   r r °  İ¹   ßI   â   ¼  v İº  ›   –   İº  I   –   ™b   –   ¯°  İº  I   &°  İ¶   º  ¼  JI   È   İ¶   ¹   È   İ¹   ßI   â   ¹   v İĞ–   ¶   È   İ¹   ßI   â   ¿   %r ßI   â   r I      K   İ¹    ¼  ¿  º  ¹   ¹   v İ¹   ßI   â   º  v İĞ¤ 	.`‘ P(`‘ ÿÿÿñP$`*`		ÿÿÿøPÿÿÿøP(`‘ -ÿÿÿÛP$`§ &'`/`˜ ` `‘ "ÿÿÿæPJ`,`ÿÿÿìPP“ `	ÿÿÿåPD`‘ )ÿÿÿßP%P\         Š  ÿÿÿÿ   ¯   X       è   I12 è                           ¹   I   ¹   I   ¹   I   &&Ë   İ¹   ßI   âº  v İº  ßI   âº v İº ßI   âº v İ¼   ™*   –   ¹   ¹   I   ¹   I   &K   İ–   ¤ `
+
+“ `ÿÿÿôP$`
+ÿÿÿùP$`
+ÿÿÿùPD	`.	`#–0	P€   J˜Ëş   –                         Î   ¹   ßI   â   r I   ²   İ¿      ™   –   ¹    ¹   v İ £Ï¤–	   ¶	   ¹   ßI
+   âl   r È	   İ¹   ßI   â¹	   v İ¹    ¹	   v İÏ¤ %`‘ 	PN	`• 	`ÿÿÿÿP$	`1H`‘  ÿÿÿùPI`ÿÿÿüP$`ÿÿÿÿPP€            ÿÿÿÿ    K          d   ç‹d   -                         ¹   ßI   âº  I   v İº  I   ¿   ´   ¡¤ 	`ÿÿÿüP$	`+Q€€€œ   )ş|Œ   E                 	       ¯°   İ¹       ¹   %   %r °   İ¼   ßI   âl   r ßI   âv  İĞ¤ &`	&ÿÿÿÙP(`
+ÿÿÿûPJPP€€œ          D   ÿÿÿÿØ   UÁÈ   v                       ¯°   İº  I   ßI   â   r °   İ¹   ßI   â   r ¹    ¼   Jr K	   İ¹   ßI   â
+   r ¹    ¼   Jr K	   İĞ¤ 	&`” 
+P(	`‘ 	P	2ÿÿÿ÷P)	`‘ 	P	5ÿÿÿ÷P*P€€€Ø          u   ÿÿÿÿœ   )ş|Œ   E                 	       ¯°   İ¹       ¹   %   %r °   İ¼   ßI   âl   r ßI   âv  İĞ¤ &`	&ÿÿÿÙP(`
+ÿÿÿûPJPP€€œ          D   ÿÿÿÿØ   UÁÈ   v                       ¯°   İº  I   ßI   â   r °   İ¹   ßI   â   r ¹    ¼   Jr K	   İ¹   ßI   â
+   r ¹    ¼   Jr K	   İĞ¤ 	&`” 
+P(	`‘ 	P	2ÿÿÿ÷P)	`‘ 	P	5ÿÿÿ÷P*P€€€Ø          u   ÿÿÿÿT   péºŸT   (                         º  I      ™   –   ¹    v  İ–   ¤ 	`˜ 	`?P€T   péºŸT   (                         º  I      ™   –   ¹    v  İ–   ¤ 	`˜ 	`?P€   "FQ3H  x               1       9‡Ì   İªÎ   ¯°   °  °  İ¹    r  ‘’š   –   ¿  ¿     ‰   ”–   İ¹    r  ‘’š   –   ¿  ¿    ‰   ”–   İ¹   ßI   â   r ²   İ¹   ßI   â   r ²   İ¿   I   ßI	   âr  °  İ¿   I   ßI	   âr  °  İ¼  
+   œ   –   İ¼  
+   –   ™Å   –   ¯°  İ¹   ßI   â   r °  İ¼     K   İ¼  I   ßI   â   v İ¼  
+   ™   –   ¹    ¿   v İ–!   ¼  
+   ™   –#   ¹    ¿   v İ–%    £¯°  İĞ¯°   °  °  İÏ˜‰   ¯°  İĞ–%   8   ¼  ;   ¼  ;   °   İ¹   ßI   â   r ²   İ¹       ¼   r ßI   âl   r ßI   âl   v İ¯°   °  °  İÏ £–1   ¢¿   £¿   Š˜   –1   ­¿   £¿   Š–1   ¤“ `Pª `Pª@`‘ 	P)`‘ 	PI `‘ P(!`‘ PH	`® 9&%`‘ 	P(	`/	`• PD`” `ÿÿÿÿPI`” `ÿÿÿÿPI	`1@¨@`%	)	N !`‘ 	PI"`(ÿÿÿàP*ÿÿÿûPJ;ÿÿÿúP“0@²P€€€     P  ?   o         8  ÿÿÿÿ     »          ¯            ¾                   W  Ğ  ŞÄ^À  >                )      ¯°   İº  I   ßI   â   r °   İ¶   ¹    ¼   Jr È   İ¶   ¼   JÈ   İ¹   ßI	   â
+   r ¹   K   İ¹   I      K   İ¹   I      K   İ¹   I      K   İ¹   I      K   İ¿   ´      K   İ¿   ´      K   İ¹    v  İ¹    ¹   v İ¹    v  İ¿   ´      K   İ¿   I   ßI   â   v İĞ¤ &`” 	P(`ÿÿÿ÷P)`‘@`‘ 	PN`• `• `• `•@`• `•@`J`ÿÿÿÿP$`J`• `– P%	P€Ğ         =  ÿÿÿÿˆ   uÉ¤qx   @                       ¯°   İ   °   İ¿   ´   ¼   K   İ¿   I   ßI   â   v İĞ¤ 	&"`*`” `– P%	Pˆ          ?   ÿÿÿÿl   ûŠŞ¨l   6   	                     »  Ì   İ¿   I   ßI   â   v İ¹    l   ôv İ¤)`– P$`5CP4PH   `ˆH                             ¿   I   ßI   â   v İ¤ 	`– P$P€€x  $Ã h  è                        Î   ¯°   °  İl   Ì  İ¹   ßI   â   r °   İ¹   ßI   â   r °  İ¹   ßI   â   r ²   İ¹   ßI   â   r ²   İ¼   ßI	   â
+   l   v İ¼  ßI	   â
+   l   v İ¿   ßI	   â
+   l   v İ¿   ßI	   â
+   l   v İÏ¤ š@`‘ 	P(`‘ 	P(`‘ 	P)`‘ 	PI` %ÿÿÿæPD` %ÿÿÿæPD`‘ $ÿÿÿæPD(`‘ $ÿÿÿæPE+P€€€x        â   ÿÿÿÿl   @W	!l   :                          ¹   I      K   İ¹   I      K   İ¿      v İ¤ `• `• `P$Pl   @W	!l   :                          ¹   I      K   İ¹   I      K   İ¿      v İ¤ `• `• `P$Pè   ëËïè   ¡                          ¿   ´   I      ™H   –   ¹   I      K   İ¹   I      K   İ¿   	   v İ˜C   –
+   9úÆ¹   I   
+   K   İ¹   I      K   İ¿      v İ–   ¤ `Ÿ 	`• 	`• 	`P 	`• 	`• 	`PI
+P€<   ·D<                            ¿   ´   º  K   İ¤ `“ PD   _»?ÉD                             ¿   ´   I      K   İ¤ `š P€Ø   `#8ÕÈ   z                         Î   l   Ì  İl   Ì  İ¹   ßI   â   r ²   İ¹   ßI   â   r ²   İ¹   ßI   â   r ßI	   â
+   l   v İÏ¤ › `‘ 	P)`‘ 	PI`‘ 	P9ÿÿÿæP5€  ‘P€€Ø         t   ÿÿÿÿH   ÆÒ‚  ™      	          t      Î   ¯°   °  °  °  °  °  °  °  °  İº  ßI   âv  İ¹   ßI   â   r I   °  İ¹   ßI   â   r I   °  İ¹   ßI   â   r I   °  İ¹   ßI   â	   r I   °  İ¹   ßI   â
+   r I   °  İ¹   ßI   â   r I   °  İ¹   ßI   â   r I   °  İ¹   ßI   â   r ²   İ¿      K   İ°   İ¼     ™:   –$   ¿      K   İ¿   I   ßI   â   v İË   İ–(   ¼     ™B   –*   ¿   ßI      %-K   İ¿   I   ßI   â   v İË   İ–0   ¿   ¼  r šB   –2   ¿   ßI      %-K   İ¿   I   ßI   â   v İË   İ–8   ¼     ™B   –:   ¿   ßI      %-K   İ¿   I   ßI   â   v İË   İ–@   ¼     ™B   –B   ¿   ßI      %-K   İ¿   I   ßI   â   v İË   İ–H   ¼     ™B   –J   ¿   ßI      %-K   İ¿   I   ßI   â   v İË   İ–P   ¼     ™B   –R   ¿   ßI      %-K   İ¿   I   ßI   â   v İË   İ–X   ¼   š   –Y    £Ï¤–Y   ¼  I   ™8   –\   ¿      K   İ¿   I   ßI   â   v İ £Ï¤–`   ¿   ¼  r š8   –b   ¿      K   İ¿   I   ßI   â   v İ £Ï¤–f   8   ;   ¼  ;   ¼  ;    ¼  ;!   ¼  ;"   ¼  ;#   ¼  ;$   ¼  ;%   °  İ¿   &   ¼  r ßI'   âl(   r ßI)   âl*   v İÏ¤ « 	`
+PD`‘ 	P-`‘ 	P-`‘ 	P-`‘ 	P-`‘ 	P-`‘ 	P-`‘ 	PM%`‘ 	P)	`@`F`” ` `– P$`K`” `˜ `– P$`K`ÿÿÿóP-`˜ `– P$`K"`” `˜ `– P$`K(`” `˜ `– P$`K.`” `˜ `– P$`K4`” `˜ `– P$`K:`.`AzH?`– ` `– P$`AzHF`ÿÿÿóP-` `– P$`AzHL`%&))))))NW	`+ÿÿÿİP*ÿÿÿûPJvÿÿÿúPEzP€H        “  ÿÿÿÿ    ~             Ç                      Ü  áLd‚œ                        Î   ¯°   °  °  İº  I   ™N   –   ¯°  İ   °  İ¿  ´  ¼  K   İ¿  I   ßI   â   v İ £ĞÏ¤Ğ–   º  I	   °   İ¿  ´  I
+      K   İ¹   ßI   â   r ²   İ¿   I
+      K   İ¹   ßI   â   r °  İ¼  ¼   K   İ¹   ßI   â   r °  İ¼  ßI   â   l   v İÏ¤ 	“@`’ &.`*`” `– P$`AJ	`M`š@*`‘ 	P)`•@(`‘ 	P(`N&`‘ 	P(` 'ÿÿÿæPEP€€Ü          ÿÿÿÿ   %   D          f             g         d   ë‘d   5                          ¿   ´   I      K   İ¿  ´  I      K   İ¤ `š `š P€€€`   Ğ›©ö`   0                         ¿   ´      K   İ¿   I   ßI   â   v İ¤ `• `– P$P€€   ;ó7æ`   &                       ¯°   İk   °   İ¼   ßI   âº  r £Ğ¤Ğ¤ &`*	`ÿÿÿûP#T€€€          %   ÿÿÿÿ    #              Rbú    W                         ¹    º  8      ;   8      ;   ;   ¹	   ßI
+   âº r ;   r ßI   âl   r ¡¤ 	`%*%OÿÿÿöPHPJÿÿÿûP#Q8   «lh8                            º  ßI   âr  ¡ `
+	P€   ¥wÔğ   ¦                        ¯°   °  İ¹   I      K   İ¹   I      K   İ¹   I      K   İ¹	   I      K   İ¹
+   ßI   â   r    K   °   İ¹
+   ßI   â   r    K   °  İĞ¤ *`• `• `• `• `‘ 	P’ `‘ 	P“0P          ¥   ÿÿÿÿ`  ö×êP  ä          	              ¯°   °  °  °  °  İ¹   ßI   â   r I   °  İ¹   ßI   â   r I   °  İ¹   ßI   â   r I   °  İ8   ;	   ;
+   ¼  ;   ¼  ;   ¼  ;      ;   ;   ;   °   İ¹       ¼   r °  İ¼  ßI   âl   v İĞ¤ – `‘ 	P-`‘ 	P-`‘ 	P-`%	&	&	)	)	)	*	&	; `'ÿÿÿáP(`
+ÿÿÿûP5P€`         ã   ÿÿÿÿh  TŒ°<T  ñ                       %»  Ì   İ‡Ì   İª¿   I   Ì  İ¹    r  ‘’š   –   ¿   ¿      ‰   ”–   İ¹    ¹   v İ¹    ¹   8      ;	   
+   v İ¹   I      K   İ¹   I      K   İ¹   I      K   İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤‘ 	`@	`Pª 	`ÿÿÿÿPD	`	ÿÿÿõPD	`• 	`• 	`•@­Ph  X  E              Ç   P   Ìø“TP   %                         º  I   ™   –   ¹    v  İ–   ¤ 	`• 	`?P  ÍÚ6  ¨                        ¯°   °  İ¹   ßI   â   r I   °   İ¶   8   ;   ¹	   ;
+   ¹   ;   ¼   ;      ;   È   İ¹   ßI   â¹   v İ¹       ¹   r °  İ¼  ßI   âl   v İĞ¤ *`‘ 	P-`*	&	*	*	)	@	`ÿÿÿüPD`*ÿÿÿŞP(`
+ÿÿÿûP5P€€         §   ÿÿÿÿP  f†ªº<  è                        %‡Ì   İª¹   ßI   â   r    K   İ¹    ¹   r ‘’š   –   ¿   ¿      ‰   ”–   İ¹   ßI   â	   r ¹
+   ™   –      ˜   –   ¹
+   I      %–   K   İ¹    ¹
+   v İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤(	`‘ 	PN	`ÿÿÿôPª 	`‘ 	P¾ 	`ÿÿÿÿP$­PP  @  P              Ç   |  ]‰Bh  	                       %‡Ì   İª¶   ¹   ßI   â   r È   İ¹   K   İ¹    r  ‘’š   –
+   ¿   ¿      ‰
+   ”–
+   İ¹    ¹   v İ¹	   I
+      K   İ¹   I
+      K   İ¹   I
+      K   İ¹   I
+      K   İ¹   I
+      K   İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤(`– P)`L`Pª `ÿÿÿÿPD`• `• `• `• `•­P€|  l  W              è   ü   €F†è   œ                        %‡Ì   İª¹    r  ‘’š   –   ¿   ¿      ‰   ”–   İ¹    ¹   v İ¹   I      K   İ¹   ßI	   âv İ £¢¿   £¿   Š˜   –   ­¿   £¿   Š–   ¤H`Pª `ÿÿÿÿP$`• `P­P€€€ü   ì   ,              {   h    V•«h   5                  	        ¹   I   ¹   I   ™   –   ¹   ßI   âv  İ–	   ¤ 	`
+• 	`P9P€€€Ì   L–€(¼   o                 
+       ¯°  İ¹   ßI   â   r Ë   İ¼   ™   –   ¼   I      K   İ–   ¹    	   r °  İ¼  ßI
+   âl   v İĞ¤  `‘ 	P(	`.`™@`P(`
+ÿÿÿûP5P€€Ì          n   ÿÿÿÿğ   tìğ   ¡                         º  I   Ì   İ¹   ßI   â¿   v İ¹   I      K   İ¹   I   	   K   İ¹
+   I   	   K   İ¹   I      K   İ¹   I   	   K   İ¹    v  İ¹    v  İ¤ 	`.	`ÿÿÿüPD	`• 	`• 	`• 	`• 	`• 	`J	`*P€3õØ  `ˆ      @  `,    @.  -    @1  0  /  Y  3  2  4  5  6  7    `ˆ     `4  5  9  ,    @:  -  7    `$    `4  5    `8  <  ï    p;     p	  `&  
+  `4  5    `8  ?  ï    p;     p  `(    `4  5    `8  B  ï  
+  p;     p  `   `&  H    p  `ó     `  `F  G    p&  H    pJ  K       `4  5    `8  D  !  ï    p;     p  `4  5  T  K  &       `4  5  W    ` `    `C    `Y  Y  *  4  5  Z  [    `  ]  ^  `  !  a  b  _  c  d  f  e  g  V   h  i    H    p  k  é  l  m  2  n  C  '  F  >  ï    po    p  ˆ   q  r  s  t  u  v  x  w  z  {    `M  N     O    P  Q  R    pS    pU    pX  ]  ^  ~  }  i    `     `    Š  ‹  }  Œ  &  H    p    V   h    ‘  ’  f  “  ”  •  –  —     `   ` A    f  V     ]  ^  ›  _    œ       Ÿ  ¡  £  ¥  &  H    p  e  §  h  }    `  ˆ   }  G    p#  ` %  ` #  $  `#  ˜  Ç   @  ˆ  $  H  "  p˜  (    “  È  Ä  2  Å  }     é  m  l    p    "  `   ‘  ‹  f  V   •  —  @    ]  ^  o  _  ©     œ  e  «  ¬       Ÿ  ®  &  H     p  }  h  ±  ³  µ  ·  ¹  ¼  ¾  À  Á  Ã  ¡  (  Ä  2  Å    Æ  !  p!  `   ˆ   }  G    p)  `-  `.  `Ç   4  5  Ù     P˜  °  ˆ   Ü  2  /  `É  İ  Ş      “      é  0  Ï  ß  !  à  +  `,  `Ò  4  5  Ó  K  Ô  8  Ö  ×  É  ï  '  p;   '  `   (  `!    ]  ^  ­  _  ©  '  ó     œ      Ë  Ÿ  p  e  Î    H  %  p2  *  `“      é  1  Ï  Ñ  Ğ    Æ  &  p&  `  ˆ   }    G  $  p0  `5  å  æ  ç  œ  ¬  4  `5  `[  ´  |  !  ˜  "      †  e    é  m  l      p    ˆ   *  L  ‡  $  C     6  `7  ` e       1  `2  `;  >      ó  ø  *  ü  ˆ   3  `ÿ    e          @ù   )   ï  2  p;   3  p9  `  
+ 8  `    
+  5  p<  `    G ˆ   *  @  #  “  È  (  Ä  2  Å  }  ˜  :  `;  `    G *  ™    @ #  A  !    f  ˆ   V   4  5  )  I ï  I  p=  `N   “  è  O ;  ‡  $    é  m  l       p      >  `   R N  S ?   ?  `@  `;  >      k  é  m  l  )  ‚  A  `4  5  „  [  ´  |  !  ˜  "        p    †  e  L  ‡  $  C  D  `4  5  ‘  B  `C  `  “  è  *  ë  ‡  $  %  H  *  p4  5  G  `H  `[  ´  |    “  ”  ˜  }  –  E  `F  `)  í  #  î  ï  ,  p;   K  `L  `[  ´  |    “  ”  ˜  }  –  I  `J  `)  í  #  ğ  ï  .  p;   M  `ö  ÷  ò  N  `ö  ÷  ò  Q  `e  R  `  é  m  l  
+  u   S  `  é  p  l  
+  m   T  `e     é  m  l  
+  u   p  U  `é  m  l  O  `P  `:  p          Æ  7  p8  p9  p;  pX  `Y  `  Pî  [  `7  Z  `,    @.  -    @1  0  /  Y  3  2  ï  C  pa  `é  m  l  p  ^  `_  `ƒ  `  `7 e       [  é  m  l       u  9 ;   Æ  ?  pb  `7 e       \  `]  `      *      " $ % & ˆ   e  (      ) + , - . / 2  0 1   @   2 3 #  4  5 ï  >  p;   @  pV  `W  `A  pB  p           Æ  =  pc  `d  `   é  m  l      p        ? ˆ   *  @ g  `[  ;  ‡  $  C    
+  @D *  o    é  m  l     p    e  `f  `    ? *  @ B 	  @   ‘  ‹  f  ˆ   V   •  —  )  <  ï  F  ph  `H F i  `;  ‡  $    é  m  l  M  P l  `[  4  5    é  p  l  
+  m        Ò  Q j  `k  `    k  é  m  l  )  V ï  N  p   `  p  p  p  p	  p  p  p  p  p  p#  p(  p1  p4  pH  pJ  pL  p                   	  
+                                            !  "  ˆ   #  $  %  &  '  (  M    €    pÉ  [  “  á  5  â  è  )  pé  ì  Æ  +  pï  -  pñ  ò  ó  ô  /  pø  0  p6  p<  p> D  pA E  pE F G G  pJ K L M K  pT M  pÿX„•  e                     )               8         #      ;               W     !        W     ! /      >         *      X     ! ,      X     ! ;      @         6      Y     ! 8      Y     ! X      C         J      Z     ! D      [     ! B      \     ! H      ]     ! U      Z     ! §      L         `      ^       g      _       p   7   `       k      a     ! n      b       6  !             ¾      ˆ         »              ! ò      ˜         ×      c     ! Õ      d     ! H     ‡           1   e     ! ø      f     ! ı      g       ú      h     !       K         z  &   i     ! N     j     ! k     k       O     l     ! §     i         [               W     m     ! t  	           ! i             ! ˆ  	           ! }             ! ‘               •               Ò     ò         ®     n     ! Ë     n     ! ò             î     o     ! º               ›               £               «               ™             ¶               )               ş  +             â             ! İ               ø             ! É     *        Ï     )         Í     p     ! 5               W               E             ! m                    F        ø     q     !      K        p  
+             0     Q        ‰               z             ! H©À      z      z                @€ ‚  ˆ  k  ˆ  #             @€ ¹  H  £  H  3             D€b  ü  K  ü  =                ¡  Ê  ¡  Ê  ?               Ò  ù  Ò  ù  A             D€  ¯  ş  ¯  F                T  }  T  }  H               …  ¬  …  ¬  J             D€Ò  –  ¸  –  R               7  d  7  d  T               l  “  l  “  V             D€²  à
+  ˜  à
+  [              €	  ¦
+  	  ¦
+  ]             €‰	  æ	  ‰	  æ	  a   /            ½	  Ğ	  ½	  Ğ	  b   ,            $
+  >
+  $
+  >
+  f   .            ®
+  İ
+  ®
+  İ
+  k              ó
+  —  ã
+  —  q                ~  î  v  î  u                        z              €±  é  ©  é     "            È  2  È  2  –   0            B  {  :  {  §   )           @€Ó    Å    Ã   ;           €6  i  #  i  ä               È  î  È  î  ç   E           ‚  #  k  #  ï             €   #    #  õ               K!  h!  K!  h!    5           $#  !2  #  !2              D€ #  2  —#  2                Â&  ß&  Â&  ß&  *  *          D€0  2  ÿ/  2  Y  6            0  »0  0  »0  ^  (          €J2  Ö=  62  Ö=  j            € à2  Ó=  à2  Ó=  r              E6  u6  E6  u6  Œ  (           8  Ë=  8  Ë=  ™  0            ,:  ·=  ,:  ·=  £              G>  ‹?  5>  ‹?  ½             Ç?  A  ¾?  A  È  ;             w@  Æ@  w@  Æ@  Ğ  %           GA  B  GA  B  Ø  ?             ²A  …B  ²A  …B  Ú             ÔB   D  ÔB   D  á  B             BC  D  BC  D  ã              øD  <E  ğD  <E  î  O            E  ÒE  †E  ÒE  ó  P          D€	F  aN  ôE  aN  ú               tJ  bM  tJ  bM                sM  ]N  sM  ]N  5            €“N  O  €N  O  =              ÎN  O  ÎN  O  ?             €HO  ¦U  @O  ¦U  G  7             óP  …Q  ëP  …Q  O  2             R  ’R  ùQ  ’R  V  2             şR  iT  öR  iT  ]  1             ¼T  ìT  T  ìT  j  $            gU   U  _U   U  o  1           €¿U  ]k  ·U  ]k  u  
+            ŸV  fi  —V  fi  y  O           "c  3h  "c  3h  Ñ              ”g  #h  Œg  #h  é  @             †h  ^i  †h  ^i  ï              ®i  j  ™i  j  ö             Yj  [k  Hj  [k  ü              8k  Sk  8k  Sk                Âk  m  ºk  m    K           €cm  †p  [m  †p    N           @€Yo  ƒp  So  ƒp  (              4q  |q  ,q  |q  9  N           “q  şs  q  şs  ?             @€àr  ûs  Úr  ûs  K             @€u  |v  şt  |v  Z             @€³v  0w  ¥v  0w  h  6             Dw  “w  4w  “w  p             €ëw  z  ãw  z  w  I             Çx  z  Çx  z  ~            5¡İXÔ®NR’XÑ.      fÂfÂFÅÚ—fº1   U    O^partitionKey=%28http%2Clocalhost%2C8000%29,:http://localhost:8000/frontend/index.js necko:classified 1 strongly-framed 1 request-method GET response-head HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 31259
+Content-Type: text/javascript; charset=utf-8
+Last-Modified: Tue, 12 Mar 2024 17:30:21 GMT
+Date: Thu, 11 Apr 2024 11:47:09 GMT
+ original-response-headers Accept-Ranges: bytes
+Content-Length: 31259
+Content-Type: text/javascript; charset=utf-8
+Last-Modified: Tue, 12 Mar 2024 17:30:21 GMT
+Date: Thu, 11 Apr 2024 11:47:09 GMT
+ ctid 2 uncompressed-len 0 net-response-time-onstart 14 net-response-time-onstop 14 alt-data 1;31259,javascript/moz-script-bytecode-20240322073705-8l alt-data-from-child 1  ³;

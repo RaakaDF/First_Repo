@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<data grt_format="2.0">
+  <value _ptr_="0x55896ea72a00" type="list" content-type="object" content-struct-name="db.mgmt.ServerInstance">
+    <value type="object" struct-name="db.mgmt.ServerInstance" id="1c474762-013c-11ee-b1c3-d506f41408b1" struct-checksum="0x367436e2">
+      <link type="object" struct-name="db.mgmt.Connection" key="connection">1c474763-013c-11ee-b1c3-d506f41408b1</link>
+      <value _ptr_="0x55896f358910" type="dict" key="loginInfo"/>
+      <value _ptr_="0x55896f358800" type="dict" key="serverInfo">
+        <value type="int" key="setupPending">1</value>
+        <value type="string" key="sys.config.path"></value>
+        <value type="string" key="sys.config.section">mysqld</value>
+        <value type="string" key="sys.preset">Custom</value>
+        <value type="string" key="sys.system">Linux</value>
+      </value>
+      <value type="string" key="name">Local 3306</value>
+      <link type="object" struct-name="GrtObject" key="owner">1be13778-013c-11ee-b1c3-d506f41408b1</link>
+    </value>
+    <value type="object" struct-name="db.mgmt.ServerInstance" id="3e2b28ce-0145-11ee-b1c3-d506f41408b1" struct-checksum="0x367436e2">
+      <link type="object" struct-name="db.mgmt.Connection" key="connection">91111c97-0141-11ee-b1c3-d506f41408b1</link>
+      <value _ptr_="0x55896fa1be80" type="dict" key="loginInfo">
+        <value type="string" key="ssh.hostName"></value>
+        <value type="string" key="ssh.key">~/.ssh/ssh_private_key</value>
+        <value type="string" key="ssh.localPort">3306</value>
+        <value type="int" key="ssh.useKey">0</value>
+        <value type="string" key="ssh.userName">mysql</value>
+      </value>
+      <value _ptr_="0x55896ea1df40" type="dict" key="serverInfo">
+        <value type="int" key="setupPending">1</value>
+      </value>
+      <value type="string" key="name">raaka</value>
+      <link type="object" struct-name="GrtObject" key="owner">1be13778-013c-11ee-b1c3-d506f41408b1</link>
+    </value>
+  </value>
+</data>
